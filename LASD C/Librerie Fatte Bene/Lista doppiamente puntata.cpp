@@ -68,31 +68,29 @@ struct el *crea_lista(int n) {
 
 
 
-//lista doppiamente puntata circolare
-struct el *crea_lista(int n, struct el* testa, struct el* testa1, struct el* testa_lista, struct el* ultimo_nodo) {
-	
-	if(n != 0){
-		
-		testa=(struct el *)malloc(sizeof(struct el));
-		printf("inserire primo elemento\n");
-		scanf("%d",&testa->inf);
-		testa->next = NULL; //da inserire per dare un next iniziale
-		testa->prev = testa1;
-		testa1 = testa;
-		
-		//se è l'ultimo elemento
-		if(n == 1){
-			testa->next = testa_lista; //imposta come successivo dell'ultimo nodo il primo nodo della lista
-			testa_lista->prev = testa; //imposta come precedente dell'elemento in testa l'elemento in coda
-		}
-		
-		n = n - 1;
-		testa->next = crea_lista(n, testa->next, testa1, testa_lista, ultimo_nodo);
-
-	}
-	
-	
-	return(testa);
+/*Lista doppiamente puntata*/
+struct el *crea_lista(int n) {
+    struct el *p, *punt;
+    int i;
+    if(n==0) {
+        p = NULL;
+    } else {
+        /* creazione primo elemento */
+        p = (struct el*)malloc(sizeof(struct el));
+        printf("\nInserisci il primo valore: ");
+        scanf("%d", &p->inf);
+        punt = p;
+        p->prev = NULL;
+        for(i=2; i<=n; i++) {
+            punt->next = (struct el *)malloc(sizeof(struct el));
+            punt->next->prev = punt;
+            punt = punt->next;
+            printf("\nInserisci il %d elemento: ", i);
+            scanf("%d", &punt->inf);
+        } // chiudo il for
+        punt->next = NULL;
+    } // chiudo l'if-else
+    return(p); // ritorno il puntatore alla testa
 } // chiudo la funzione
 
 
