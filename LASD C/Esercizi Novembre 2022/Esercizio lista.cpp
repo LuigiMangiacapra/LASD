@@ -15,11 +15,11 @@ struct elem{
 	struct elem* prev;
 };
 
-struct elem* crea_lista(int n_elem, struct elem* prec, struct elem* curr);
-void print_lista(struct elem* testa);
-int somma_elem(struct elem* testa, int somma);
+struct elem* crea_lista(int n_elem);
+void print_lista(struct elem* testa, int n);
+int somma_elem(struct elem* testa, int somma, int n);
 struct elem* substitute_even(int n_elem, struct elem* testa, int somma);
-struct elem* funzione_esercizio(int n_elem, struct elem* testa);
+struct elem* funzione_esercizio(int n_elem, struct elem* testa, int n);
 
 
 int main(){
@@ -34,70 +34,66 @@ int main(){
 		scanf("%d", &n_elem);
 	}
 	
-	lista = crea_lista(n_elem, prec, curr);
+	lista = crea_lista(n_elem);
 	
-	print_lista(lista);
+	print_lista(lista, n_elem);
 	
 	printf("\n");
 	
-	lista = funzione_esercizio(n_elem, lista);
+	lista = funzione_esercizio(n_elem, lista, n_elem);
 	
-	print_lista(lista);
+	print_lista(lista, n_elem);
 }
 
 
-struct elem* crea_lista(int n_elem, struct elem* prec, struct elem* curr){
-	int elem;
-	struct elem* testa = NULL;
-	
-	if(n_elem != 0){
-		curr = (struct elem*)malloc(sizeof(struct elem));
-		if (curr == NULL) {
-   			printf("Errore: impossibile allocare memoria.\n");
-    		exit(1);
-		}	
-		printf("Inserire elemento\n");
-		scanf("%d", &elem);
-		curr->info = elem;
-		curr->next = NULL;
-		curr->prev = NULL;
+/*Lista doppiamente puntata circolare*/
+struct elem *crea_lista(int n) {
+    struct elem *p, *punt;
+    int i;
+    if(n==0) {
+        p = NULL;
+    } else {
+        /* creazione primo elemento */
+        p = (struct elem*)malloc(sizeof(struct elem));
+        printf("\nInserisci il primo valore: ");
+        scanf("%d", &p->info);
+        punt = p;
+        p->prev = NULL;
+        for(i=2; i<=n; i++) {
+            punt->next = (struct elem *)malloc(sizeof(struct elem));
+            punt->next->prev = punt;
+            punt = punt->next;
+            printf("\nInserisci il %d elemento: ", i);
+            scanf("%d", &punt->info);
+        } // chiudo il for
+        punt->next = p; // lista circolare: l'ultimo elemento punta alla testa
+        p->prev = punt; // la testa punta all'ultimo elemento
+    } // chiudo l'if-else
+    return(p); // ritorno il puntatore alla testa
+} // chiudo la funzione
+
+
+
+void print_lista(struct elem *p, int n) {
+	printf("\nlista ---> ");
+	int i = 0 ;
+	while(i < n){
 		
-		if(prec != NULL){
-			prec->next = curr;
-			curr->prev = prec;
-		}
-		else
-			testa = curr;
-		
-		if(n_elem == 1){
-			curr->next = testa;
-			testa->prev = curr;
-		}
-		
-		n_elem = n_elem - 1;
-		curr->next = crea_lista(n_elem, prec, curr->next);
+		printf("%d", p->info); /* visualizza l'informazione */
+		printf(" ---> ");
+		p = p->next;
+		i++; /* scorre la lista di un elemento */
 	}
+	printf("NULL\n\n"); 
+} 
+
+
+int somma_elem(struct elem* testa, int somma, int n){
 	
-	return testa;
-}
-
-
-
-void print_lista(struct elem* testa){
-	
-	if(testa != NULL){
-		
-		printf("|%d| ", testa->info);
-		print_lista(testa->next);
-	}
-}
-
-
-int somma_elem(struct elem* testa, int somma){
-	
-	if(testa != NULL){
+	if(n != 0){
 		somma = somma + testa->info;
-		somma = somma_elem(testa->next, somma);
+		n = n - 1;
+		somma = somma_elem(testa->next, somma, n);
 	}
 	return somma;
 }
@@ -119,9 +115,9 @@ struct elem* substitute_even(int n_elem, struct elem* testa, int somma){
 }
 
 
-struct elem* funzione_esercizio(int n_elem, struct elem* testa){
+struct elem* funzione_esercizio(int n_elem, struct elem* testa, int n){
 	int somma;
-	somma = somma_elem(testa, somma);
+	somma = somma_elem(testa, somma, n);
 	
 	substitute_even(n_elem, testa, somma);
 }
