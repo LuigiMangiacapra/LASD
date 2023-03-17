@@ -10,9 +10,9 @@ struct elem{
 };
 
 struct elem* crea_lista(int n);
-void stampa_lista(struct elem* lista, int n);
-struct elem* elimina_pari(struct elem* lista1, struct elem* testa);
-struct elem* elimina_dispari(struct elem* lista2, struct elem* testa);
+void stampa_lista(struct elem* lista, struct elem* testa);
+struct elem* elimina_pari(struct elem* lista1, struct elem* testa, int n);
+struct elem* elimina_dispari(struct elem* lista2, struct elem* testa, int n);
 
 int main(){
 	int n;
@@ -20,17 +20,21 @@ int main(){
 	printf("Inserire grandezza lista\n");
 	scanf("%d", &n);
 	lista1 = crea_lista(n);
-	stampa_lista(lista1, n);
+	stampa_lista(lista1, lista1);
 	printf("\n");
 	lista2 = crea_lista(n);
-	stampa_lista(lista2, n);
+	stampa_lista(lista2, lista2);
 	
-	lista1 = elimina_pari(lista1, lista1);
-	lista2 = elimina_dispari(lista2, lista2);
-
-	stampa_lista(lista1, n);
+	lista1 = elimina_pari(lista1, lista1, n);
+	
+	stampa_lista(lista1, lista1);
 	printf("\n");
-	stampa_lista(lista2, n);
+	
+	
+	lista2 = elimina_dispari(lista2, lista2, n);
+
+	
+	stampa_lista(lista2, lista2);
 	
 }
 
@@ -44,7 +48,6 @@ struct elem* crea_lista(int n){
 		printf("Inserire primo elemento\n");
 		scanf("%d", &p->info);
 		punt = p;
-		p->prev = NULL;
 		
 		for(int i=1; i<n; i++){
 			punt->next = (struct elem*)malloc(sizeof(struct elem));
@@ -62,31 +65,42 @@ struct elem* crea_lista(int n){
 
 
 
-void stampa_lista(struct elem* p, int n){
+void stampa_lista(struct elem* p, struct elem* testa){
 	printf("\nlista ");
 	
-	while(n != 0){
+	while(p->next != testa){
 		printf(" ---> ");
 		printf("%d", p->info); /* visualizza l'informazione */
 		
 		p = p->next;
-		n--;
 	}
-
+	printf(" ---> ");
+	printf("%d", p->info);
+	printf("\n");
 }
 
 
 
-struct elem* elimina_pari(struct elem* lista, struct elem* testa) {
+struct elem* elimina_pari(struct elem* lista, struct elem* testa, int n) {
 	struct elem* tmp;
-    if (lista == testa->prev) {
+    if (n == 0) {
         return testa;
     }
+    
+    //Se la lista contiene un solo elemento
+    if(lista == lista->next){
+    	if(lista->info % 2 == 0){
+    		return NULL;
+		}
+		else{
+			return testa;
+		}
+	}
     
     if (lista->info % 2 == 0) {
         tmp = lista;
         
-        //Reimposta il successivo dell'elemento precedente a quello eliminato, se l'elemento precedente è l'ultimo elementoallora ci troviamo in testa
+        //Se l'elemento da eliminare non si trova in testa
         if (lista != testa) {
             lista->prev->next = lista->next;
         } 
@@ -94,10 +108,14 @@ struct elem* elimina_pari(struct elem* lista, struct elem* testa) {
             testa = lista->next;
         }
         
-        //Reimposta il precedente dell'elemento successivo all'elemento eliminato
+        //Se l'elemento da eliminare non è l'ultimo
         if (lista->next != testa) {
             lista->next->prev = lista->prev;
         }
+        else{
+        	testa->prev = lista->prev;
+        	lista->prev->next = testa;
+		}
         
         lista = lista->next;
         free(tmp);
@@ -106,7 +124,8 @@ struct elem* elimina_pari(struct elem* lista, struct elem* testa) {
         lista = lista->next;
     }
     
-    elimina_dispari(lista, testa);
+    n = n - 1;
+    elimina_pari(lista, testa, n);
     
     return testa;
 }
@@ -114,25 +133,41 @@ struct elem* elimina_pari(struct elem* lista, struct elem* testa) {
 
 
 
-struct elem* elimina_dispari(struct elem* lista, struct elem* testa) {
+struct elem* elimina_dispari(struct elem* lista, struct elem* testa, int n) {
 	struct elem* tmp;
-    if (lista == NULL) {
+    if (n == 0) {
         return testa;
     }
+    
+    //Se la lista contiene un solo elemento
+    if(lista == lista->next){
+    	if(lista->info % 2 != 0){
+    		return NULL;
+		}
+		else{
+			return testa;
+		}
+	}
     
     if (lista->info % 2 != 0) {
         tmp = lista;
         
-        if (lista != testa) { //si controlla se prev non è NULL perché se lo fosse allora staremo parlando dell'elemento in testa
+        //Se l'elemento da eliminare non si trova in testa
+        if (lista != testa) { 
             lista->prev->next = lista->next;
         }
 		else {
             testa = lista->next;
         }
         
+        //Se l'elemento da eliminare non è l'ultimo
         if (lista->next != testa) {
             lista->next->prev = lista->prev;
         }
+        else{
+        	testa->prev = lista->prev;
+        	lista->prev->next = testa;
+		}
         
         lista = lista->next;
         free(tmp);
@@ -141,7 +176,10 @@ struct elem* elimina_dispari(struct elem* lista, struct elem* testa) {
         lista = lista->next;
     }
     
-    elimina_dispari(lista, testa);
-    
+    n = n - 1;
+    elimina_dispari(lista, testa, n);
+     
     return testa;
 }
+
+

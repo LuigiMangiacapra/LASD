@@ -93,7 +93,7 @@ struct nodo* crea_albero(struct nodo* radice, int elem) {
 
     return radice;
 }
-
+ 
 
 void stampa_albero(struct nodo* radice) {
 
