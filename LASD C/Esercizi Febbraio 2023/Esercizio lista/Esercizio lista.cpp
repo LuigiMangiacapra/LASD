@@ -103,7 +103,7 @@ struct elem* elimina_pari(struct elem* lista, struct elem* testa) {
         lista = lista->next;
     }
     
-    testa = elimina_pari(lista, testa);
+    elimina_pari(lista, testa);
     
     return testa;
 }
@@ -138,7 +138,7 @@ struct elem* elimina_dispari(struct elem* lista, struct elem* testa) {
         lista = lista->next;
     }
     
-    testa = elimina_dispari(lista, testa);
+    elimina_dispari(lista, testa);
     
     return testa;
 }
