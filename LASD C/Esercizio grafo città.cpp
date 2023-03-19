@@ -330,7 +330,7 @@ graph* remove_city(graph* G, char* u){
 			e = g->head;
 			while(e != NULL){
 				if(strcmp(e->name, u) == 0){
-					if(e == g->head){//Importante
+					if(e == g->head){//Importante (se l'elemento è in testa)
 						tmp = g->head;
 						g->head = e->next;
 						e = e->next;

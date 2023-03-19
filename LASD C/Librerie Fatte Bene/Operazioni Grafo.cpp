@@ -58,6 +58,7 @@ void enqueue(int Q[], int valore);
 int dequeue(int Q[]);
 int arco_peso_min(graph *G);
 void destroyqueue(int Q[]);
+void removeVertex(graph* G, int vertex);
 
 int main(){
 	graph *G;
@@ -65,7 +66,7 @@ int main(){
 	
 	do{
 		printf("\nScagli l'operazione da svolgere\n");
-		printf("1-Crea grafo, 2-Aggiungi_arco, 3-Mondifica_un_peso, 4-Cancella_arco, 5-Grado_uscente, 6-Grado_entrante, 7-Arco_con_peso_maggiore, 8-Stampa_grafo, 9-exit\n");
+		printf("1-Crea grafo, 2-Aggiungi_arco, 3-Mondifica_un_peso, 4-Cancella_arco, 5-Grado_uscente, 6-Grado_entrante, 7-Arco_con_peso_maggiore, 8-Stampa_grafo, 9-Elimina_vertice , 10-exit\n");
 		scanf("%d",&scelta);
 		switch(scelta){
 			case 1:
@@ -129,11 +130,16 @@ int main(){
 				break;
 			case 8:
 				g_print(G);
+				break;
+			case 9:
+				printf("Inserisci elemento da eliminare\n");
+				scanf("%d", &v);
+				removeVertex(G, v);
 		
 		}
 	
 	}
-	while(scelta==1 || scelta==2 || scelta==3 || scelta==4 || scelta==5 || scelta==6 || scelta==7 || scelta==8);
+	while(scelta==1 || scelta==2 || scelta==3 || scelta==4 || scelta==5 || scelta==6 || scelta==7 || scelta==8 || scelta==9);
 }
 
 
@@ -288,6 +294,7 @@ void removeVertex(graph* G, int vertex) {
         currNode = nextNode;
     }
     G->adj[vertex] = NULL;
+    G = (graph*)realloc(G, (G->num_v) - 1);
 }
 
 
