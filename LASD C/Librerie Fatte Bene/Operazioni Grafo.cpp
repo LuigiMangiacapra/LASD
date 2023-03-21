@@ -306,6 +306,7 @@ void removeVertex(graph* G, int vertex) {
     for(i = 0; i < G->num_v; i++){
     	edge* testa = G->adj[i];
     	if(testa != NULL){
+    		//Caso elemento in testa
     		if(testa->key == vertex){
 				G->adj[i] = testa->next;
 			}
@@ -325,7 +326,6 @@ void removeVertex(graph* G, int vertex) {
 		}
 	    
 	}
-	
 
 }
 
