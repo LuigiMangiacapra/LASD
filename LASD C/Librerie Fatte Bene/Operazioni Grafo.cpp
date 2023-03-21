@@ -59,6 +59,7 @@ int dequeue(int Q[]);
 int arco_peso_min(graph *G);
 void destroyqueue(int Q[]);
 void removeVertex(graph* G, int vertex);
+void deleteArco(graph * G, int from, int dest);
 
 int main(){
 	graph *G;
@@ -242,7 +243,7 @@ void g_add(graph *G, int u, int v){ //u è il nodo da cui esce l'arco, v è il nod
 
 
 
-//Cancellazione arco
+//Cancellazione arco ricorsiva
 graph* remove(graph *G, int u, int v){
 	edge *tmp;//è un puntatore quindi ha bisogno dell'asterisco
 	edge *e;
@@ -261,40 +262,71 @@ graph* remove(graph *G, int u, int v){
 	return G;
 }
 
+/*
+//Cancellazione arco iterativa
+void deleteArco(graph * G, int from, int dest){
+	//caso testa
+	edge* testa = G->adj[from];
+	if(testa->key == dest){
+		G->adj[from] = testa->next;
+	}
+	//caso elemento in centro
+	else{
+		edge* scorri = testa;
+		while(scorri->next){
+			if(scorri->next->key == dest){
+				testa = scorri->next;
+				scorri->next = testa->next;
+			}
+			else
+				scorri = scorri->next;
+		}
+	}
+	free(testa);
+}
+*/
+
 
 void removeVertex(graph* G, int vertex) {
-    edge* currNode;
-    edge* prevNode;
+    
     int i;
-
-    // Rimuovi il vertice dalle liste di adiacenza dei suoi vicini
-    for (i = 0; i < G->num_v; i++) {
-        currNode = G->adj[i];
-        prevNode = NULL;
-        while (currNode != NULL) {
-            if (currNode->key == vertex) {
-                if (prevNode == NULL) { //se c'è un elemento
-                    G->adj[i] = currNode->next; //la nuova testa è l'elemento successivo cioè NULL
-                } else {
-                    prevNode->next = currNode->next; //il successivo del precedete è il successivo del nodo attuale
-                }
-                free(currNode);
-                break;
-            }
-            prevNode = currNode;
-            currNode = currNode->next;
-        }
-    }
-
-    // Rimuovi la lista di adiacenza del vertice
-    currNode = G->adj[vertex];
+    
+    // Rimuovi la lista di adiacenza del vertice e il vertice stesso
+    edge *currNode = G->adj[vertex];
     while (currNode != NULL) {
-        edge* nextNode = currNode->next;
-        free(currNode);
-        currNode = nextNode;
+        edge* tmp = currNode;
+        currNode = currNode->next;
+        free(tmp);
     }
     G->adj[vertex] = NULL;
-    G = (graph*)realloc(G, (G->num_v) - 1);
+    G->num_v = G->num_v - 1;
+	
+    
+    //Rimuove l'elemento nelle liste di adiacenza
+    for(i = 0; i < G->num_v; i++){
+    	edge* testa = G->adj[i];
+    	if(testa != NULL){
+    		if(testa->key == vertex){
+				G->adj[i] = testa->next;
+			}
+			//caso elemento in centro
+			else{
+				edge* scorri = testa;
+				while(scorri->next){
+					if(scorri->next->key == vertex){
+						testa = scorri->next;
+						scorri->next = testa->next;
+					}
+					else
+						scorri = scorri->next;
+				}
+			}
+			free(testa);
+		}
+	    
+	}
+	
+
 }
 
 
