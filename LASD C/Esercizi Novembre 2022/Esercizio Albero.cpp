@@ -131,16 +131,16 @@ int is_bst(struct nodo* root){
 struct nodo* find_max(struct nodo* radice){
 	
 	if(radice != NULL){
-		
+		printf("radice-dis: %d\n", radice->info);
 		if(radice->destro != NULL){
-			radice->destro = find_max(radice->destro);
-		}
-		else{
 			
-			return radice;
+			radice = find_max(radice->destro);//Radice viene riempito con l'ultimo elemento perché lo stack che contiene tale elemento non effettua chiamate ricorsive e ritorna l'elemento.
+											  //Dopodiché le altre chiamate non ritornano elementi, quindi radice rimane con il medesimo elemento
+			
 		}
-		
+		printf("radice-ris: %d\n", radice->info);
 	}
+	return radice;
 }
 
 
@@ -150,6 +150,7 @@ void merge_func(struct nodo* radice){
 	struct nodo* max = NULL;
 	struct nodo* rad = NULL;
 	int flag = is_bst(radice);
+	
 	if(flag == 0){
 		printf("L'albero non e' un ABR\n'");
 		return;
@@ -177,3 +178,4 @@ void merge_func(struct nodo* radice){
 		}
 	}
 }
+
