@@ -108,36 +108,41 @@ void stampa_albero(struct nodo* radice) {
 
 
 int funzione_esercizio(struct nodo* radice, int elem, int bst, int* max, struct nodo* radice_sub) {
-    if (radice != NULL) {
-        if (radice->sinistro != NULL && radice->sinistro->info > radice->info) {
-            bst = 0;
-        }
-        if (radice->destro != NULL && radice->destro->info < radice->info) {
-            bst = 0;
-        }
-        
-        if(bst != 0){
-            if (radice->info == elem) {
-                radice_sub = radice;
-                printf("radice_sub->info (Testa): %d\n", radice_sub->info);
-            }
-            
-            if (radice_sub->destro == NULL) {
-                *max = radice_sub->info;
-                printf("max: %d\n", *max);
-                printf("radice_sub->info: %d\n", radice_sub->info);
-            }
-
-            //radice scorre per controllare se l'albero è un ABR, *radice_sub scorre per trovare il massimo a partire da una radice del sottoalbero
-            funzione_esercizio(radice->destro, elem, bst, max, radice_sub->destro);
-            funzione_esercizio(radice->sinistro, elem, bst, max, radice_sub);
-            
-            
-        } else {
-            printf("L'albero non è un ABR\n'");
-            exit(1);
-        }
+    if(radice == NULL){
+    	bst = 1;
+    	return *max;
+	}
+    	
+    if (radice->sinistro != NULL && radice->sinistro->info > radice->info) {
+        bst = 0;
     }
+    if (radice->destro != NULL && radice->destro->info < radice->info) {
+        bst = 0;
+    }
+        
+    if(bst != 0){
+        if (radice->info == elem) {
+            radice_sub = radice;
+            //printf("radice_sub->info (Testa): %d\n", radice_sub->info);
+        }
+            
+        if (radice_sub->destro == NULL) {
+            *max = radice_sub->info;
+            //printf("max: %d\n", *max);
+            //printf("radice_sub->info: %d\n", radice_sub->info);
+        }
+
+        //radice scorre per controllare se l'albero è un ABR, *radice_sub scorre per trovare il massimo a partire da una radice del sottoalbero
+        funzione_esercizio(radice->destro, elem, bst, max, radice_sub->destro);
+        funzione_esercizio(radice->sinistro, elem, bst, max, radice_sub);
+            
+            
+    } 
+	else {
+        printf("L'albero non è un ABR\n'");
+        exit(1);
+    }
+    
     return *max;
 }
 
