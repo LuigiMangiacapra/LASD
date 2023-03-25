@@ -107,7 +107,7 @@ int main(){
 					count++;
 					printf("Inserici elemento %d:\n",count);
 					scanf("%d",&k);
-					radice=inserisci(radice, k);
+					radice = inserisci(radice, k);
 					n--;
 				}
 				break;
@@ -158,7 +158,7 @@ int main(){
 struct nodo* inserisci(struct nodo* radice, int k){
 	
 	if(radice==NULL)
-		radice=crea_nodo(NULL, NULL,k);//Ricordare sempre il tipo di ritorno di una funzione che modifica la struttura
+		radice = crea_nodo(NULL, NULL,k);//Ricordare sempre il tipo di ritorno di una funzione che modifica la struttura
 	else{
 		if(radice->inf<k)
 			radice->destro=inserisci(radice->destro,k);
@@ -343,10 +343,10 @@ struct nodo* elimina_radice(struct nodo* radice){
 		//Se il nodo da eliminare ha un solo sottoalbero(figlio) o entrambi NULL
 		if(radice->destro==NULL || radice->sinistro==NULL){
 			tmp=radice;//salva il nodo da eliminare in tmp
-			if(radice->destro!=NULL)//se ha figlio destro, sposta il puntatore su quest'ultimo rendendolo il nuovo figlio del padre dell'elemento eliminato
-				radice=radice->destro;
-			else if(radice->sinistro!=NULL)//se ha un figlio sinistro, sposta il puntatore su quest'ultimo...(come sopra)
+			if(radice->destro == NULL)//se ha figlio destro, sposta il puntatore su quest'ultimo rendendolo il nuovo figlio del padre dell'elemento eliminato
 				radice=radice->sinistro;
+			else if(radice->sinistro!=NULL)//se ha un figlio sinistro, sposta il puntatore su quest'ultimo...(come sopra)
+				radice=radice->destro;
 			free(tmp);//elimina l'elemento dopo aver spostato il riferimento del puntatore al nodo figlio
 			
 		}

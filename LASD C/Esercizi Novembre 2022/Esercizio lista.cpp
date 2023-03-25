@@ -72,6 +72,30 @@ struct elem *crea_lista(int n) {
     return(p); // ritorno il puntatore alla testa
 } // chiudo la funzione
 
+struct elem *crea_lista(int n){
+	int valore = 0;
+	if(n == 0){
+		return NULL;
+	}
+	else{
+		struct elem* testa = (struct elem*)malloc(sizeof(struct elem));
+		printf("Inserisci primo valore elemento\n");
+		scanf("%d", &testa->inf);
+		struct elem* punt = testa;
+		
+		for(int i = 1; i < n; i++){
+			punt->next = (struct elem*)malloc(sizeof(struct elem));
+			punt->next->prev = punt;
+			punt = punt->next;
+			printf("Inserire valore elemento\n");
+			scanf("%d", &punt->info);	
+		}
+		punt->next = testa;
+		testa->prev = punt;
+	}
+	
+	return testa;
+}
 
 
 void print_lista(struct elem *p, int n) {

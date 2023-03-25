@@ -111,19 +111,26 @@ struct nodo* find_rad(struct nodo* radice, int elem){
 
 
 int is_bst(struct nodo* root){
-	
+	if(root != NULL)
+		printf("curr_node_dis: %d\n", root->info);
 	if (root == NULL) {
+		printf("Entrato NULL\n");
         return 1;
     }
     if (root->sinistro != NULL && root->sinistro->info > root->info) {
+    	printf("Entrato root->sinistro\n");
         return 0;
     }
     if (root->destro != NULL && root->destro->info < root->info) {
+    	printf("Entrato root->destro\n");
         return 0;
     }
-    if (!is_bst(root->sinistro) || !is_bst(root->destro)) {
+    if (is_bst(root->sinistro) == 0 || is_bst(root->destro) == 0) { //Appena si risale dalla prima chiamata ricorsiva e il nodo corrente ha il figlio destro, effettua la seconda chiamata
+    	printf("Entrato funzioni ricorsive\n");
         return 0;
     }
+    if(root != NULL)
+		printf("curr_node_ris: %d\n", root->info);
     return 1;
 }
 
@@ -149,13 +156,14 @@ void merge_func(struct nodo* radice){
 	int elem; 
 	struct nodo* max = NULL;
 	struct nodo* rad = NULL;
+	
 	int flag = is_bst(radice);
 	
 	if(flag == 0){
 		printf("L'albero non e' un ABR\n'");
 		return;
 	}
-	else{
+	else{ 
 		printf("Digitare radice del sottoalbero\n");
 		scanf("%d", &elem);
 		

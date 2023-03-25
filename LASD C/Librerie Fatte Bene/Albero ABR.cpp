@@ -127,6 +127,9 @@ int inserisciMaxMin(struct nodo* node, int min, int max){
 //VERSIONE POCO EFFICIENTE MA PIU' INTUIBILE
 int riconosci_ABR(struct nodo* radice){
 	
+	if(radice == NULL)
+		return 1;
+		
 	if(radice->sinistro != NULL && radice->sinistro->inf > radice->inf) //se il nodo corrente ha un figlio sinistro e il figlio sinistro ha un valore maggiore del padre allora non è un ABR
 		return 0;
 		
