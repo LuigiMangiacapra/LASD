@@ -110,7 +110,7 @@ struct elem* elimina_pari(struct elem* lista, struct elem* testa) {
 
 
 
-
+//ricorsiva
 struct elem* elimina_dispari(struct elem* lista, struct elem* testa) {
 	struct elem* tmp;
     if (lista == NULL) {
@@ -142,3 +142,39 @@ struct elem* elimina_dispari(struct elem* lista, struct elem* testa) {
     
     return testa;
 }
+
+
+//iterativa
+struct elem* elimina_dispari(struct elem* lista, struct elem* testa, int elem) {
+	
+    struct elem* prev = NULL;
+    struct elem* curr = testa
+    
+    while (curr != NULL && curr->info != elem) {
+        prev = curr;
+        curr = curr->next;
+    }
+ 
+    if (curr == NULL) {
+        //elemento non trovato
+        return;
+    }
+ 
+    if (prev == NULL) {
+        // L'arco è il primo dell'elenco di adiacenza
+        testa = curr->next;
+    } 
+	else {
+        // L'arco non è il primo dell'elenco di adiacenza
+        prev->next = curr->next;
+        curr->next->prev = prev;
+    }
+ 
+    // Libera la memoria dell'arco eliminato
+    free(curr);
+    
+    return testa;
+}
+
+
+

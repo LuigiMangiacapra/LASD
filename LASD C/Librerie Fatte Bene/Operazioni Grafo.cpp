@@ -265,24 +265,34 @@ graph* remove(graph *G, int u, int v){
 /*
 //Cancellazione arco iterativa
 void deleteArco(graph * G, int from, int dest){
-	//caso testa
-	edge* testa = G->adj[from];
-	if(testa->key == dest){
-		G->adj[from] = testa->next;
-	}
-	//caso elemento in centro
-	else{
-		edge* scorri = testa;
-		while(scorri->next){
-			if(scorri->next->key == dest){
-				testa = scorri->next;
-				scorri->next = testa->next;
-			}
-			else
-				scorri = scorri->next;
-		}
-	}
-	free(testa);
+	if (from >= G->nv || from < 0 || dest >= G->nv || dest < 0) {
+        // Uno o entrambi i vertici non esistono
+        return;
+    }
+ 
+    // Cerca l'arco nell'elenco di adiacenza del vertice from
+    edge* prev = NULL;
+    edge* curr = G->adj[from];
+    while (curr != NULL && curr->value != dest) {
+        prev = curr;
+        curr = curr->next;
+    }
+ 
+    if (curr == NULL) {
+        // L'arco non esiste
+        return;
+    }
+ 
+    if (prev == NULL) {
+        // L'arco è il primo dell'elenco di adiacenza
+        G->adj[from] = curr->next;
+    } else {
+        // L'arco non è il primo dell'elenco di adiacenza
+        prev->next = curr->next;
+    }
+ 
+    // Libera la memoria dell'arco eliminato
+    free(curr);
 }
 */
 
