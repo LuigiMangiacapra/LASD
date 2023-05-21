@@ -111,7 +111,7 @@ void rewerse(int Q[]){
 void enqueue(int Q[], int valore)
 {
 	Q[Q[MAX+1]] = valore; //inserimento del valore nella posizione indicata da MAX + 1
-	if (Q[0] == 0) //Solo quando Q[0] == 0 va aggiornato ad 1 perché è il primo e unico elemento in testa se non si effettuano decodamenti
+	if (Q[0] == 0) //Solo quando Q[0] == 0, cioè quando la coda è vuota, va aggiornato ad 1 perché è il primo e unico elemento in testa se non si effettuano decodamenti
 		Q[0]=1; 
 	Q[MAX+1] = (Q[MAX+1] % MAX) + 1; // il % permette di andare oltre il limite dell'indice senza andare in overflow
 }

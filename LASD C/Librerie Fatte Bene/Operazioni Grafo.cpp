@@ -58,7 +58,7 @@ void enqueue(int Q[], int valore);
 int dequeue(int Q[]);
 int arco_peso_min(graph *G);
 void destroyqueue(int Q[]);
-void removeVertex(graph* G, int vertex);
+void deleteVertex(graph* G, int vertex);
 void deleteArco(graph * G, int from, int dest);
 
 int main(){
@@ -135,7 +135,7 @@ int main(){
 			case 9:
 				printf("Inserisci elemento da eliminare\n");
 				scanf("%d", &v);
-				removeVertex(G, v);
+				deleteVertex(G, vertex);
 		
 		}
 	
@@ -297,45 +297,60 @@ void deleteArco(graph * G, int from, int dest){
 */
 
 
-void removeVertex(graph* G, int vertex) {
+void deleteVertex(graph* G, int vertex) {
     
-    int i;
+    //vertex = veritce da eliminare
+    int i = 0, j = 0;
+     
+    edge * currNode = G->adj[vertex];
     
-    // Rimuovi la lista di adiacenza del vertice e il vertice stesso
-    edge *currNode = G->adj[vertex];
+    //caso lista propria
+    //svuotiamo la sua lista di adiacenza
     while (currNode != NULL) {
         edge* tmp = currNode;
         currNode = currNode->next;
         free(tmp);
     }
-    G->adj[vertex] = NULL;
-    G->num_v = G->num_v - 1;
-	
     
-    //Rimuove l'elemento nelle liste di adiacenza
-    for(i = 0; i < G->num_v; i++){
+ 
+    //riallochiamo il vettore
+    for(i = vertex; i < G->nv-1; i++) {
+    	G->adj[i] = G->adj[i+1];
+	}
+    
+        
+    //sempre l'ultima posizione va a null
+    G->adj[G->nv-1] = NULL;
+    G->nv -= 1;
+    G->adj = (edge **)realloc(G->adj, G->nv * sizeof(edge));
+    
+  
+    //Rimuove l'elemento nelle liste di adiacenza degli altri vertici
+    for(i = 0; i < G->nv; i++){
+    	
     	edge* testa = G->adj[i];
     	if(testa != NULL){
     		//Caso elemento in testa
-    		if(testa->key == vertex){
+    		if(testa->value == vertex){
 				G->adj[i] = testa->next;
 			}
 			//caso elemento in centro
-			else{
-				edge* scorri = testa;
-				while(scorri->next){
-					if(scorri->next->key == vertex){
+			else {
+				edge * scorri = testa;
+				while(scorri->next) {
+					if(scorri->next->value == vertex){
 						testa = scorri->next;
-						scorri->next = testa->next;
+						scorri->next = scorri->next->next;
+						
 					}
-					else
-						scorri = scorri->next;
+					else scorri = scorri->next;
 				}
+				
 			}
 			free(testa);
-		}
-	    
+		}   
 	}
+	
 
 }
 

@@ -33,12 +33,12 @@ struct elem{
 };
 
 
-int vuoto(struct nodo* radice){
-	if(radice) return 0;
+int vuoto(struct nodo* radice){ 
+	if(radice != 0) return 0;
 	return 1;
 }
 
-int radice(struct nodo* radice, struct nodo *val){
+int radice(struct nodo* radice, struct nodo *val){ 
 	int ok=0;
 	if(!vuoto(radice)){
 		val->inf=radice->inf;
