@@ -165,7 +165,7 @@ void somma_doppi_pari(int Q[]){
 		else if(val1 % 2 == 0){
 			enqueue(Q, val1);
 		}
-		else if(val2 %2 == 0){
+		else if(val2 % 2 == 0){
 			enqueue(Q, val2);
 		}
 			

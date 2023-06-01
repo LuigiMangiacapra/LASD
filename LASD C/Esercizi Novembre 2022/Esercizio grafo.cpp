@@ -107,7 +107,7 @@ struct graph* inserisci_arco(struct graph* grafo, int u, int v){
 	
 	while(u >= grafo->size){
 		printf("Il vertice di partenza non è presente nel grafo\n");
-		printf("Reinserire nodo di arrivo\n");
+		printf("Reinserire nodo di partenza\n");
 		scanf("%d", &u);
 	}
 	

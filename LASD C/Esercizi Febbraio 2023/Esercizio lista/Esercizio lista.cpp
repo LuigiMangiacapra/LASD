@@ -11,8 +11,7 @@ struct elem{
 
 struct elem* crea_lista(int n);
 void stampa_lista(struct elem* lista);
-struct elem* elimina_pari(struct elem* lista1, struct elem* testa);
-struct elem* elimina_dispari(struct elem* lista2, struct elem* testa);
+void elimina_pari_e_dispari(struct elem** lista, struct elem** lista2);
 
 int main(){
 	int n;
@@ -25,8 +24,7 @@ int main(){
 	lista2 = crea_lista(n);
 	stampa_lista(lista2);
 	
-	lista1 = elimina_pari(lista1, lista1);
-	lista2 = elimina_dispari(lista2, lista2);
+	elimina_pari_e_dispari(&lista1, &lista2);
 
 	stampa_lista(lista1);
 	printf("\n");
@@ -74,107 +72,54 @@ void stampa_lista(struct elem* p){
 
 
 
-struct elem* elimina_pari(struct elem* lista, struct elem* testa) {
-	struct elem* tmp;
-    if (lista == NULL) {
-        return testa;
-    }
-    
-    if (lista->info % 2 == 0) {
-        tmp = lista;
-        
-        //Reimposta il successivo dell'elemento precedente a quello eliminato, se l'elemento precedente è nullo allora ci troviamo in testa
-        if (lista->prev != NULL) {
-            lista->prev->next = lista->next;
-        } 
-		else {
-            testa = lista->next;
-        }
-        
-        //Reimposta il precedente dell'elemento successivo all'elemento eliminato
-        if (lista->next != NULL) {
-            lista->next->prev = lista->prev;
-        }
-        
-        lista = lista->next;
-        free(tmp);
-    } 
-	else {
-        lista = lista->next;
-    }
-    
-    elimina_pari(lista, testa);
-    
-    return testa;
-}
-
-
-
 //ricorsiva
-struct elem* elimina_dispari(struct elem* lista, struct elem* testa) {
-	struct elem* tmp;
-    if (lista == NULL) {
-        return testa;
-    }
-    
-    if (lista->info % 2 != 0) {
-        tmp = lista;
-        
-        if (lista->prev != NULL) { //si controlla se prev non è NULL perché se lo fosse allora staremo parlando dell'elemento in testa
-            lista->prev->next = lista->next;
-        }
-		else {
-            testa = lista->next;
-        }
-        
-        if (lista->next != NULL) {
-            lista->next->prev = lista->prev;
-        }
-        
-        lista = lista->next;
-        free(tmp);
-    } 
-	else {
-        lista = lista->next;
-    }
-    
-    elimina_dispari(lista, testa);
-    
-    return testa;
-}
-
-
-//iterativa
-struct elem* elimina_dispari(struct elem* lista, struct elem* testa, int elem) {
+void elimina_pari_e_dispari(struct elem** lista, struct elem** lista2) {
+    struct elem* tmp;
+    struct elem* tmp2;
 	
-    struct elem* prev = NULL;
-    struct elem* curr = testa
-    
-    while (curr != NULL && curr->info != elem) {
-        prev = curr;
-        curr = curr->next;
-    }
- 
-    if (curr == NULL) {
-        //elemento non trovato
+	//Se le due liste sono vuote o se si è arrivati con entrambe le liste a NULL
+    if ((*lista) == NULL && (*lista2) == NULL) {
         return;
     }
- 
-    if (prev == NULL) {
-        // L'arco è il primo dell'elenco di adiacenza
-        testa = curr->next;
-    } 
-	else {
-        // L'arco non è il primo dell'elenco di adiacenza
-        prev->next = curr->next;
-        curr->next->prev = prev;
+
+    if ((*lista) != NULL) {//Controlla che la lista1 non sia nulla per poter accedere all'elemento
+        if ((*lista)->info % 2 == 0) {//Controlla se l'elemento è pari
+            tmp = *lista;
+            *lista = (*lista)->next;
+			
+			//Imposta l'elemento precedente del successivo a NULL in quanto il precedente sarà eliminato
+            if (*lista != NULL) {
+                (*lista)->prev = NULL;
+            }
+
+            free(tmp);
+        } 
+		else {
+            lista = &((*lista)->next);//Prende il successivo del nodo contenuto in (*lista) e assegna l'indirizzo alla variabile lista
+        }
     }
- 
-    // Libera la memoria dell'arco eliminato
-    free(curr);
-    
-    return testa;
+
+    if ((*lista2) != NULL) {//Controlla che la lista1 non sia nulla per poter accedere all'elemento
+        if ((*lista2)->info % 2 != 0) {//Controlla se l'elemento è dispari
+            tmp2 = *lista2;
+            *lista2 = (*lista2)->next;
+			
+			//Imposta l'elemento precedente del successivo a NULL in quanto il precedente sarà eliminato
+            if (*lista2 != NULL) {
+                (*lista2)->prev = NULL;
+            }
+
+            free(tmp2);
+        } 
+		else {
+            lista2 = &((*lista2)->next);
+        }
+    }
+
+    elimina_pari_e_dispari(lista, lista2);//Prende il successivo del nodo contenuto in (*lista2) e assegna l'indirizzo alla variabile lista2
 }
+
+
 
 
 

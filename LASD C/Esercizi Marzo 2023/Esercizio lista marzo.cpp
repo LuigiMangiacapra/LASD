@@ -2,7 +2,7 @@
 	Creare due liste doppiamente puntate: 
 	- stampare le liste
 	- ordinare la lista1
-	- Inserire il nodo della prima lista in testa alla seconda
+	- Inserire il nodo dispari della prima lista in testa alla seconda
 */
 
 #include <stdio.h>
@@ -99,7 +99,7 @@ void funzione_esercizio(struct nodo** list1, struct nodo** list2){
         if (*list1 != NULL ) {
         	
             if ((*list1)->info % 2 == 0) {
-            	printf("pari |%d|\n", (*list1)->info);
+            	//Ordina la lista1
                 if ((*list1)->next != NULL && (*list1)->info > (*list1)->next->info) {
 
                     temp = (*list1)->info;
@@ -111,19 +111,15 @@ void funzione_esercizio(struct nodo** list1, struct nodo** list2){
             	funzione_esercizio(&(*list1)->next, list2);
 			} 
 			else {
-				printf("dispari |%d|\n", (*list1)->info);
+				//Sposta gli elementi dispari dalla lista1 alla lista2
                 tmp = *list1;
                 *list1 = (*list1)->next;
                 tmp->next = *list2;
                 *list2 = tmp;
                 funzione_esercizio(list1, list2);
-                funzione_esercizio(list1, list2);
-            }
-            
+            }  
             
         }
-        
-        
         
     }
 	    

@@ -17,12 +17,13 @@ struct el
 struct el *crea_lista(int n);  
 void visualizza_lista(struct el *lista, int n);
 struct el *rimpiazza_dispari(struct el* lista, struct el* disp, int somma, int n_elem, int count, int pos);
+void replaceOddWithAverage(struct el* head, int sum1, int sum2, int count, int media);
 
 int main(){
 	struct el *lista = NULL;
 	struct el* disp = NULL;
 	struct el* testa = NULL;
-	int count = 0, media = 0, somma = 0, n, pos = 0, i=0;
+	int count = 0, media = 0, somma = 0, somma2 = 0, n, pos = 0, i=0;
 	printf("\n Specificare il numero di elementi... ");
 	scanf("%d", &n);
 	lista=crea_lista(n); 
@@ -36,7 +37,8 @@ int main(){
 	}
 	
 	count = n;
-	lista=rimpiazza_dispari(testa, disp, somma, n, count, pos);
+	/*lista=rimpiazza_dispari(testa, disp, somma, n, count, pos);*/
+	replaceOddWithAverage(testa, somma, somma2, count, media);
 	visualizza_lista(testa, n);
 	
 }
@@ -69,32 +71,6 @@ struct el *crea_lista(int n) {
 } // chiudo la funzione
 
 
-/*struct el *crea_lista(int n) {
-	struct el *p, *punt;
-	int i;
-	if(n==0) 
-		p = NULL; 
-	else {
-		 creazione primo elemento 
-		p = (struct el *)malloc(sizeof(struct el));
-		printf("\nInserisci il primo valore: ");
-		scanf("%d", &p->inf);
-		punt = p; 
-		p-> prev=NULL;
-		for(i=2; i<=n; i++)
-		{	
-			punt->next = (struct el *)malloc(sizeof(struct el));
-			punt->next->prev=punt;
-			punt = punt->next;
-			printf("\nInserisci il %d elemento: ", i);
-			scanf("%d", &punt->inf);
-		} // chiudo il for
-		punt->next = NULL; // marcatore fine lista
-	} // chiudo l'if-else
-	return(p);
-} // chiudo la funzione
-*/
-
 void visualizza_lista(struct el *p, int n) {
 	printf("\nlista ---> ");
 	int i = 0 ;
@@ -110,7 +86,7 @@ void visualizza_lista(struct el *p, int n) {
 
 
 //rimpiazzare ogni elemento dispari con la media degli altri elementi
-struct el *rimpiazza_dispari(struct el* lista, struct el* disp, int somma,  int n_elem, int count, int pos){
+/*struct el *rimpiazza_dispari(struct el* lista, struct el* disp, int somma,  int n_elem, int count, int pos){
 	
 	
 	if(n_elem > 0){
@@ -131,6 +107,31 @@ struct el *rimpiazza_dispari(struct el* lista, struct el* disp, int somma,  int 
 	}
 	
 	return lista;
+}*/
+
+
+void replaceOddWithAverage(struct el* head, int sum1, int sum2, int count, int media, int n) {
+    if (n == 0) {
+        return;
+    }
+    
+	sum1+=head->inf;
+	n = n-1;
+	replaceOddWithAverage(head->next, sum1, sum2, count, media, n);
+	
+	sum2+=head->inf;
+	n = n-1;
+	
+	if(n == 1){
+		media = sum1 + sum2;
+		if(head->inf % 2 != 0){
+	  		media = (media - head->inf)/(count-1);
+	  		head->inf = media;
+		}
+	}
+	
+    replaceOddWithAverage(head->next, sum1, sum2, count, media, n);
+	
 }
 
 
