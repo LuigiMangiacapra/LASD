@@ -127,11 +127,14 @@ struct nodo* somma_fratelli(struct nodo* radice){
 			printf("l'albero T non è un ABR\n");
 			return radice;
 		}
-		radice2 = inserisci(radice2, radice->inf);//Inserisce tutti gli elementi dell'albero iniziale in un nuovo albero
+		
+		//Inserisce tutti gli elementi dell'albero iniziale in un nuovo albero
+		radice2 = inserisci(radice2, radice->inf);
 		
 		//Ricerca del nodo con due figli attraverso chiamate ricorsive
 		radice2->sinistro = somma_fratelli(radice->sinistro);
 		radice2->destro = somma_fratelli(radice->destro);
+		
 		
 		
 		//INSERIMENTO DEL TERZO ELEMENTO DI MEZZO CON VALORE SOMMA DEL FIGLIO DESTRO E SINISTRO

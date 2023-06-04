@@ -223,7 +223,6 @@ int is_subgraph(graph *G1, graph *G2){
 	int is_subgraph = 0;
 	int i = 0;
 	int n_v, flag = 0;
-	int count1 = 0, count2 = 0;
 	
 	//Se G1 ha meno nodi di G2 già è un buon punto di partenza, altrimenti non è un sottografo per definizione
 	if(G1->num_v <= G2->num_v){
@@ -237,16 +236,12 @@ int is_subgraph(graph *G1, graph *G2){
 	//Scorre per il numero di vertici del sottografo
 	while(i < n_v){
 		g1 = G1->adj[i];//testa della singola lista di adiacenza del primo grafo
-		count1 = 0;//conteggio degli archi di ogni vertice del primo grafo
-		
+
 		while(g1 != NULL){//scorre le liste di adiacenza del primo grafo
-			count1++;
-			count2 = 0;//conteggio archi del secondo grafo
 			g2 = G2->adj[i];//testa della singola lista di adiacenza del secondo grafo
 			flag = 0;//flag per indicare se la lista di adiacenza indica se il grafo è un sottografo
 			
 			while(g2 != NULL){//scorre le liste di adiacenza del secondo grafo
-				count2++;
 				if(g1->key == g2->key){//Se almeno un arco di G1 è presente in G2 allora G1 è potenzialmente un sottografo, quindi esce senza nemmeno controllare il resto
 					flag = 1;
 					break;
