@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-/*Siano G1 e G2 due grafi orientati e pesati (con pesi interi positivi) di 0,1,...,n-1 vertici, implementati entrambi con liste di adiacenza.
+/*
+Siano G1 e G2 due grafi orientati e pesati (con pesi interi positivi) di 0,1,...,n-1 vertici, implementati entrambi con liste di adiacenza.
 Scrivere una funzione in C che presi in input (da tastiera) G1, G2 e una lista L doppiamente puntata e non circolare di valori interi, faccia l'unione dei due grafi
 in un grafo G3 e modifichi L nel modo seguente. Un arco (i,j) con peso p sarà aggiunto al grafo G3 se:
 	- l'arco (i,j) è presente in almeno uno tra G1 e G2 con pesi rispettivamente p1 e p2 e p = p1+p2
@@ -9,7 +10,7 @@ in un grafo G3 e modifichi L nel modo seguente. Un arco (i,j) con peso p sarà ag
 	
 Scrivere una funzione che permetta di creare da tastiera G1, G2 e L e di stamparli prima e dopo l'applicazione della funzione.
 Bonus: +2 punti la funzione ha complessità quadratica nel numero dei vertici di G1 e G2.
-	*/
+*/
 
 struct nodo {
 	int elem;
@@ -51,6 +52,8 @@ int main() {
     }
 
     printList(head);
+    
+    //PRIMO GRAFO
     int numero_v;
     int numero_archi1;
 
@@ -68,7 +71,7 @@ int main() {
     	scanf("%d", &part);
     	printf("Aggiungi vertice di arrivo:");
     	scanf("%d", &arrivo);
-    	printf("Aggiugni peso:");
+    	printf("Aggiungi peso:");
     	scanf("%d", &peso);
     	addArco(G1, part, arrivo, peso);
     	numero_archi1--;
@@ -83,6 +86,8 @@ int main() {
 	printf("\n");
 
 	
+	
+	//SECONDO GRAFO
 	int numero_v2;
 	int numero_archi2;
 	
@@ -101,7 +106,7 @@ int main() {
     	scanf("%d", &part);
     	printf("Aggiungi vertice di arrivo:");
     	scanf("%d", &arrivo);
-    	printf("Aggiugni peso:");
+    	printf("Aggiungi peso:");
     	scanf("%d", &peso);
     	addArco(G2, part, arrivo, peso);
     	numero_archi2--;
@@ -112,6 +117,8 @@ int main() {
     printf("Grafo G2\n");
     printGraph(G2);
 
+
+	//ESERCIZIO
     int p;
     printf("inserisci valore p: ");
     scanf("%d", &p);
@@ -127,15 +134,16 @@ int main() {
     return 0;
 }
 
-struct nodo * insertHead(struct nodo * head, int num){
-	struct nodo * newNodo = malloc(sizeof(struct nodo));
+struct nodo* insertHead(struct nodo* head, int num){
+	struct nodo* newNodo = (struct nodo* )malloc(sizeof(struct nodo));
 
 	
-	if(newNodo) {
-		newNodo->next = NULL;
+	if(newNodo != NULL) {
 		newNodo->elem = num;
+		newNodo->next = NULL;
 		
-		if(head == NULL) head = newNodo;
+		if(head == NULL) 
+			head = newNodo;
 		else {
 			newNodo->next = head;
 			head = newNodo;
@@ -147,7 +155,7 @@ struct nodo * insertHead(struct nodo * head, int num){
 }
 
 
-void printList(struct nodo * head) {
+void printList(struct nodo* head) {
 	while(head) {
 		printf("%d->", head->elem);
 		head = head->next;
@@ -184,19 +192,21 @@ graph* createGraph(int n) {
 
 
 void addArco(graph* G, int start, int dest, int peso) {
-
+	
+	//Controllo presenza del vertice di partenza
 	if(start > G->num_vertex || start < 0 || dest > G->num_vertex || dest < 0) {
 		printf("vertici fuori range\n");
 		return;
 	}
 	
+	//Creazione del vertice da inserire
 	edge* newVertex = (edge* )malloc(sizeof(edge));
 	newVertex->key = dest;
 	newVertex->peso = peso;
 	newVertex->next = NULL;
 	
 	
-	// Controllo se l'arco è già presente
+	// Controllo se l'arco di arrivo è già presente
     edge* scorri = G->adj[start];
     while (scorri != NULL) {
         if (scorri->key == dest) {

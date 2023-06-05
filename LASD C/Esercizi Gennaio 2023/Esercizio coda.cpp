@@ -1,5 +1,7 @@
-/*Scrivere una funzione che, data una coda Q di interi con cardinalità pari, modifichi Q in modo che sostituisca ad ogni coppia di valori
-consecutivi, la loro somma. La funzione restituisce la coda modificata*/
+/*
+Scrivere una funzione che, data una coda Q di interi con cardinalità pari, modifichi Q in modo che sostituisca ad ogni coppia di valori
+consecutivi, la loro somma. La funzione restituisce la coda modificata
+*/
 
 #include <stdio.h>
 

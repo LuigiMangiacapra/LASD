@@ -343,19 +343,18 @@ struct nodo* elimina_radice(struct nodo* radice){
 		//Se il nodo da eliminare ha un solo sottoalbero(figlio) o entrambi NULL
 		if(radice->destro==NULL || radice->sinistro==NULL){
 			tmp=radice;//salva il nodo da eliminare in tmp
-			if(radice->destro == NULL)//se ha figlio destro, sposta il puntatore su quest'ultimo rendendolo il nuovo figlio del padre dell'elemento eliminato
-				radice=radice->sinistro;
-			else if(radice->sinistro!=NULL)//se ha un figlio sinistro, sposta il puntatore su quest'ultimo...(come sopra)
+			if(radice->destro != NULL)//se ha figlio destro, sposta il puntatore su quest'ultimo rendendolo il nuovo figlio del padre dell'elemento eliminato
 				radice=radice->destro;
+			else if(radice->sinistro!=NULL)//se ha un figlio sinistro, sposta il puntatore su quest'ultimo...(come sopra)
+				radice=radice->sinistro;
 			free(tmp);//elimina l'elemento dopo aver spostato il riferimento del puntatore al nodo figlio
 			
 		}
 		//Se il nodo da eliminare ha due sottoalberi(figli)
 		else{//(radice->destro!=NULL && radice->sinistro!=NULL)
 			tmp=stacca_minimo(radice->destro, radice);//Trova il minimo tra i massimali (l'estremo superiore: elemento con valore prossimo alla radice, per sostituirla)
-			/*Un'alternativa è questa:
-				tmp=stacca_massimo(radice->sinistro, radice);//Trova il massimo tra i minimali (L'estremo inferiore: elemento con valore prossimo alla radice)
-			*/
+			tmp->sinistro=radice->sinistro; // Collega il figlio sinistro della radice al minimo trovato
+			tmp->destro=radice->destro; // Collega il sottoalbero destro della radice al minimo trovato
 			radice->inf=tmp->inf;//sovrascrive il nodo da eliminare con quello minimo
 			free(tmp);//elimina l'elemento minimo(alla fine, sostituendo l'elemento minimo a quello da eliminare e eliminando quello minimo, si è eliminato il nodo designato)
 		}
@@ -367,19 +366,19 @@ struct nodo* elimina_radice(struct nodo* radice){
 //stacca l'elemento minimo o lo sostituisce all'elemento eliminato(radice->inf=tmp->inf in elimina_radice)
 struct nodo* stacca_minimo(struct nodo *radice, struct nodo *padre){
 	struct nodo* ret;
-	if(radice!=NULL){
-		if(radice->sinistro!=NULL){//naviga l'albero controllando sempre sui figli sinistri, se trova un nodo senza figlio sinistro allora è minimo
-			radice=stacca_minimo(radice->sinistro,radice);//Quando bisogna navigare senza modificare non bisogna assegnare a radice->sinistro perché non si modifica nulla
+	if(radice != NULL){
+		if(radice->sinistro != NULL){//naviga l'albero controllando sempre sui figli sinistri, se trova un nodo senza figlio sinistro allora è minimo
+			radice = stacca_minimo(radice->sinistro,radice);//Quando bisogna navigare senza modificare non bisogna assegnare a radice->sinistro perché non si modifica nulla
 		}												  //trova l'elemento minimo e lo assegna a "radice"
 		else{
-			if(padre!=NULL){
-				if(padre->sinistro==radice)//se il figlio sinistro di 'padre' è minimo allora il nuovo figlio sinistro di 'padre' sarà il vecchio figlio destro del minimo
-					padre->sinistro=radice->destro;
-				else if(padre->destro==radice)//l'unica possibilità in cui il figlio destro sia minimo è quando è minimo il primo nodo del sottoalbero destro che stiamo visitando
-					padre->destro=radice->destro;
-			}
 			ret=radice;
-		}
+				
+			if(padre->sinistro == radice)//se il figlio sinistro di 'padre' è minimo allora il nuovo figlio sinistro di 'padre' sarà il vecchio figlio destro del minimo
+				padre->sinistro = radice->destro;
+			else if(padre->destro == radice)//l'unica possibilità in cui il figlio destro sia minimo è quando è minimo il primo nodo del sottoalbero destro che stiamo visitando
+				padre->destro = radice->destro;
+		}		
+	
 	}
 	return ret;	
 }
