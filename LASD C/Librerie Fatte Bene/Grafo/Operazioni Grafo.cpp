@@ -334,7 +334,7 @@ void deleteVertex(graph* G, int vertex) {
     		if(testa->value == vertex){
 				G->adj[i] = testa->next;
 			}
-			//caso elemento in centro
+			//caso elemento centrale
 			else {
 				edge * scorri = testa;
 				while(scorri->next) {
