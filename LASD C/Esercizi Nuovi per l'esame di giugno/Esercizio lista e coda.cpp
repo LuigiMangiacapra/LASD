@@ -139,7 +139,7 @@ void enqueue(int Q[], int elem){
 	}
 	Q[MAX + 1] = (Q[MAX + 1] % MAX) + 1;
 	
-}
+} 
 
 int dequeue(int Q[]){
 	int elem = Q[Q[0]];

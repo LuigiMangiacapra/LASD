@@ -206,7 +206,7 @@ void addArco(graph* G, int start, int dest, int peso) {
 	newVertex->next = NULL;
 	
 	
-	// Controllo se l'arco di arrivo è già presente
+	// Controllo se l'arco è già presente
     edge* scorri = G->adj[start];
     while (scorri != NULL) {
         if (scorri->key == dest) {
@@ -222,6 +222,7 @@ void addArco(graph* G, int start, int dest, int peso) {
 		G->adj[start] = newVertex;
 	}	
 	else {
+		//Aggiunta dell'arco in coda
 		edge* scorri = G->adj[start];
 		
 		while(scorri->next != NULL) {
@@ -252,6 +253,7 @@ graph* funzione_lezione(struct graph* G1, struct graph* G2, struct nodo** testa,
 	int gmax;
 	struct edge* g1, *g2;
 	
+	//Ottiene la grandezza massima tra i due grafi per darla al grafo risultante
 	if (G1->num_vertex < G2->num_vertex) {
         gmax = G2->num_vertex;
     } 
@@ -259,8 +261,10 @@ graph* funzione_lezione(struct graph* G1, struct graph* G2, struct nodo** testa,
         gmax = G1->num_vertex;
     }
 	
+	//Crea il grafo per l'unione
 	graph* G = createGraph(gmax);
 	
+	//Effettua l'unione tra i due grafi nel terzo se la somma dei pesi è quella data in input
 	while(i < gmax){
 		g1 = G1->adj[i];
         g2 = G2->adj[i];
@@ -282,6 +286,7 @@ graph* funzione_lezione(struct graph* G1, struct graph* G2, struct nodo** testa,
 	
 	
 	//Elimina un nodo della lista con valore p
+	//Elimina il nodo se si trova in testa
 	if((*testa)->elem == p) {
 		struct nodo* succ = *testa;
 		*testa = (*testa)->next;
@@ -304,5 +309,140 @@ graph* funzione_lezione(struct graph* G1, struct graph* G2, struct nodo** testa,
 		
 	return G;
 }
+
+
+//Con intersezione
+/*
+graph* funzione_lezione(struct graph* G1, struct graph* G2, struct nodo** testa, int p) {
+    int i = 0;
+    int gmax;
+    struct edge* g1, *g2;
+    
+    // Ottiene la grandezza massima tra i due grafi per darla al grafo risultante
+    if (G1->num_vertex < G2->num_vertex) {
+        gmax = G1->num_vertex;
+    } 
+    else {
+        gmax = G2->num_vertex;
+    }
+    
+    // Crea il grafo per l'intersezione
+    graph* G = createGraph(gmax);
+    
+    // Effettua l'intersezione tra i due grafi nel terzo se la somma dei pesi è quella data in input
+    while (i < gmax) {
+        g1 = G1->adj[i];
+        g2 = G2->adj[i];
+
+        while (g1 != NULL) {
+            while (g2 != NULL) {
+                if (p == (g1->peso + g2->peso) && g1->key == g2->key) {
+                    addArco(G, i, g1->key, g1->peso);
+                }
+                g2 = g2->next;
+            }
+            g1 = g1->next;
+        }
+        
+        i++;
+    }
+    
+    // Elimina un nodo della lista con valore p
+    // Elimina il nodo se si trova in testa
+    if ((*testa)->elem == p) {
+        struct nodo* succ = *testa;
+        *testa = (*testa)->next;
+        free(succ);
+    }
+    else {
+        struct nodo* scorri = *testa;
+        
+        while (scorri && scorri->next) {
+            if (scorri->next->elem == p) {
+                struct nodo* tmp = scorri->next;
+                scorri->next = scorri->next->next;
+                free(tmp);
+            }
+            else 
+                scorri = scorri->next;
+            
+        }
+    }
+        
+    return G;
+}
+*/
+
+
+/*
+//Con differenza
+graph* funzione_lezione(struct graph* G1, struct graph* G2, struct nodo** testa, int p) {
+    int i = 0;
+    int gmax;
+    struct edge* g1, *g2;
+    
+    // Ottiene la grandezza massima tra i due grafi per darla al grafo risultante
+    if (G1->num_vertex < G2->num_vertex) {
+        gmax = G2->num_vertex;
+    } 
+    else {
+        gmax = G1->num_vertex;
+    }
+    
+    // Crea il grafo per la differenza
+    graph* G = createGraph(gmax);
+    
+    // Effettua la differenza tra i due grafi nel terzo se la somma dei pesi è diversa da quella data in input
+    while (i < gmax) {
+        g1 = G1->adj[i];
+        g2 = G2->adj[i];
+
+        while (g1 != NULL) {
+            int trovato = 0;
+            
+            while (g2 != NULL) {
+                if (p == (g1->peso + g2->peso) && g1->key == g2->key) {
+                    trovato = 1;
+                    break;
+                }
+                g2 = g2->next;
+            }
+            
+            if (!trovato) {
+                addArco(G, i, g1->key, g1->peso);
+            }
+            
+            g1 = g1->next;
+        }
+        
+        i++;
+    }
+    
+    // Elimina un nodo della lista con valore p
+    // Elimina il nodo se si trova in testa
+    if ((*testa)->elem == p) {
+        struct nodo* succ = *testa;
+        *testa = (*testa)->next;
+        free(succ);
+    }
+    else {
+        struct nodo* scorri = *testa;
+        
+        while (scorri && scorri->next) {
+            if (scorri->next->elem == p) {
+                struct nodo* tmp = scorri->next;
+                scorri->next = scorri->next->next;
+                free(tmp);
+            }
+            else 
+                scorri = scorri->next;
+            
+        }
+    }
+        
+    return G;
+}
+
+*/
 
 
