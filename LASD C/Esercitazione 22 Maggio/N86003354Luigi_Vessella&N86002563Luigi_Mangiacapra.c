@@ -13,302 +13,288 @@ Bonus: +2 punti la funzione ha complessità quadratica nel numero dei vertici di 
 */
 
 struct nodo {
-	int elem;
-	struct nodo* next;	
+    struct nodo * next;
+    int elemento;
 };
 
 typedef struct edge {
-	int peso;
-	int key;
-	struct edge* next;
+
+    int peso; //eventualmente il peso
+    int key;
+    struct edge * next;
+
 }edge;
 
 typedef struct graph {
-	int num_vertex;
-	edge** adj;
+
+    edge ** adj;
+    int n_vertex;
+
 }graph;
 
-struct nodo * insertHead(struct nodo * head, int num);
-void printList(struct nodo * head);
-graph* createGraph(int n);
-void addArco(graph* G, int start, int dest, int peso);
-void printGraph(graph* G);
-graph* funzione_lezione(struct graph* G1, struct graph* G2, struct nodo** testa, int p);
+//funzioni elementari sul grafo
+graph * createGraph(graph * G, int num_vertex); //funzione che crea e inizializza il grafo 
+void addArco(graph * G, int start, int dest, int peso); //funzione che aggiunge un arco
+void deleteArco(graph * G, int start, int to_delete); //funzione che elimina un arco (quella facile)
+void deleteVertex(graph *G, int vertex_to_delete); //funzione che elimina un vertice (quella difficile)
+void printGraph(graph * G);
+graph * unione(graph * G1, graph * G2, int p);
+
 
 int main() {
-    struct nodo* head = NULL;
-    int dimensione_lista, i = 0;
+
+
+    struct nodo * head = NULL;
+   
+    graph* G = NULL;
+    graph* G2 = NULL;
     graph* G3 = NULL;
-    int part, arrivo, peso;
+    
 
-    printf("inserisci dimensione lista:");
-    scanf("%d", &dimensione_lista);
+    int n_vert = 0;
+    int n_archi = 0, n_archi2 = 0;
 
-    for (i = 0; i < dimensione_lista; i++) {
-        int numero;
-        printf("inserisci lista:");
-        scanf("%d", &numero);
-        head = insertHead(head, numero);
+    printf("quanti verici vuoi inserire: ");
+    scanf("%d", &n_vert);
+
+    //creo il grafo passando il numero di vertici che avrà
+    G = createGraph(G, n_vert);
+    G2 = createGraph(G2, 3); //G2 3 vertici
+
+    printf("quanti archi vuoi inserire in G1: ");
+    scanf("%d", &n_archi);
+
+    
+    for(int i = 0; i < n_archi; i++) {
+        int start, dest, peso;
+        printf("start:");
+        scanf("%d", &start);
+
+        printf("dest:");
+        scanf("%d", &dest);
+
+        printf("peso:");
+        scanf("%d", &peso);
+
+        addArco(G, start, dest, peso);
+    }
+    printf("G1:\n");
+    printGraph(G);
+
+
+
+    printf("quanti archi vuoi inserire in G2: ");
+    scanf("%d", &n_archi2);
+
+    for(int i = 0; i < n_archi2; i++) {
+        int start, dest, peso;
+        printf("start:");
+        scanf("%d", &start);
+
+        printf("dest:");
+        scanf("%d", &dest);
+
+        printf("peso:");
+        scanf("%d", &peso);
+
+        addArco(G2, start, dest, peso);
     }
 
-    printList(head);
-    
-    //PRIMO GRAFO
-    int numero_v;
-    int numero_archi1;
 
-	//Creazione grafo G1
-    printf("inserisci numero vertici per il primo grafo:");
-    scanf("%d", &numero_v);
-    graph* G1 = NULL;
-    G1 = createGraph(numero_v);
-    
-    //Inserimento archi nel grafo G1
-    printf("inserisci numero archi per il primo grafo:");
-    scanf("%d", &numero_archi1);
-    while(numero_archi1 != 0){
-    	printf("Aggiungi vertice di partenza:");
-    	scanf("%d", &part);
-    	printf("Aggiungi vertice di arrivo:");
-    	scanf("%d", &arrivo);
-    	printf("Aggiungi peso:");
-    	scanf("%d", &peso);
-    	addArco(G1, part, arrivo, peso);
-    	numero_archi1--;
-    	
-	}
-	
-	//Stampa grafo G1
-    printf("Grafo G1\n");
-    printGraph(G1);
-
-
-	printf("\n");
-
-	
-	
-	//SECONDO GRAFO
-	int numero_v2;
-	int numero_archi2;
-	
-	//Creazione grafo G2
-	printf("inserisci numero vertici per il secondo grafo:");
-    scanf("%d", &numero_v2);
-    graph* G2 = NULL;
-    G2 = createGraph(numero_v2);
-    
-    //Inserimento archi nel grafo G2
-    printf("inserisci numero archi per il secondo grafo:");
-    scanf("%d", &numero_archi2);
-    
-    while(numero_archi2 != 0){
-    	printf("Aggiungi vertice di partenza:");
-    	scanf("%d", &part);
-    	printf("Aggiungi vertice di arrivo:");
-    	scanf("%d", &arrivo);
-    	printf("Aggiungi peso:");
-    	scanf("%d", &peso);
-    	addArco(G2, part, arrivo, peso);
-    	numero_archi2--;
-    	
-	}
-	
-	//Stampa del grafo G2
-    printf("Grafo G2\n");
+    printf("\nG2:\n");
     printGraph(G2);
 
 
-	//ESERCIZIO
-    int p;
-    printf("inserisci valore p: ");
-    scanf("%d", &p);
+    printf("\nunisco in G3\n");
 
-    G3 = funzione_lezione(G1, G2, &head, p);
-
-    printf("Grafo G3:\n");
+    G3 = unione(G, G2, 10);
+    
+    printf("\nG3:\n");
     printGraph(G3);
-
-    printf("Lista dopo la modifica:\n");
-    printList(head);
 
     return 0;
 }
 
-struct nodo* insertHead(struct nodo* head, int num){
-	struct nodo* newNodo = (struct nodo* )malloc(sizeof(struct nodo));
 
-	
-	if(newNodo != NULL) {
-		newNodo->elem = num;
-		newNodo->next = NULL;
-		
-		if(head == NULL) 
-			head = newNodo;
-		else {
-			newNodo->next = head;
-			head = newNodo;
-		}
-	}
-	
-	return head;
-	
+graph * createGraph(graph * G, int num_vertex) {
+    if(num_vertex < 0) {
+        perror("numero vertici non valido");
+        exit(1);
+    }
+
+    if(num_vertex == 0) {
+        return NULL;
+    }
+
+
+    if(G == NULL) {
+        G = (graph *) malloc(sizeof(graph));
+        
+        if(G){
+            G->n_vertex = num_vertex;
+            G->adj = (edge **) malloc(num_vertex * sizeof(edge));
+            if(G->adj) {
+
+                for(int i = 0; i < num_vertex; i++) {
+                    G->adj[i] = NULL;
+                }
+
+            }
+            else{
+                perror("impossibile allocare liste di adiacenza");
+                exit(1);
+            }
+        }
+        else {
+            perror("impossibile allocare grafo");
+            exit(1);
+        }
+
+    }
+
+    return G;
 }
 
+void addArco(graph * G, int start, int dest, int peso) {
+    if(!G || start < 0 || start > G->n_vertex || dest < 0 || dest > G->n_vertex || peso < 0) {
+        printf("parametri non validi\n");
+        return;
+    }
 
-void printList(struct nodo* head) {
-	while(head) {
-		printf("%d->", head->elem);
-		head = head->next;
-	}
-	printf("NULL\n");
-}
-
-
-graph* createGraph(int n) {
-	graph* G = (graph*)malloc (sizeof(graph));
-	int i = 0;
-	if(G) {
-		G->adj = (edge**) malloc(n * sizeof(edge*));
-		if(G->adj) {
-			G->num_vertex = n;
-			while(i < n) {
-				G->adj[i] = NULL;
-				i++;
-			}
-		}
-		else{
-			perror("errore adj");
-			exit(1);
-		}
-		
-	}	
-	else {
-		perror("errore  malloc");
-		exit(1);
-	}
-	
-	return G;
-}
-
-
-void addArco(graph* G, int start, int dest, int peso) {
-	
-	//Controllo presenza del vertice di partenza
-	if(start > G->num_vertex || start < 0 || dest > G->num_vertex || dest < 0) {
-		printf("vertici fuori range\n");
-		return;
-	}
-	
-	//Creazione del vertice da inserire
-	edge* newVertex = (edge* )malloc(sizeof(edge));
-	newVertex->key = dest;
-	newVertex->peso = peso;
-	newVertex->next = NULL;
-	
-	
-	// Controllo se l'arco è già presente
-    edge* scorri = G->adj[start];
-    while (scorri != NULL) {
-        if (scorri->key == dest) {
-            printf("Arco duplicato: (%d, %d)\n", start, dest);
-            free(newVertex); // Liberare la memoria allocata per il nuovo arco
+    //ci accertiamo che non esista gia
+    edge * scorri = G->adj[start];
+    while(scorri){
+        if(scorri->key == dest) {
+            printf("arco gia esistente\n");
             return;
         }
         scorri = scorri->next;
     }
-	
-    // Se il vertice di partenza non ha archi, aggiungo il nuovo arco come primo elemento
-	if (G->adj[start] == NULL){ //start non ha archi
-		G->adj[start] = newVertex;
-	}	
-	else {
-		//Aggiunta dell'arco in coda
-		edge* scorri = G->adj[start];
-		
-		while(scorri->next != NULL) {
-			scorri = scorri->next;
-		}
-		scorri->next = newVertex;
-	}
-	
-	
-}
-
-void printGraph(graph* G){
-	int i = 0;
-	for(i = 0; i < G->num_vertex; i++) {
-		struct edge * scorri = G->adj[i];
-		printf("%d:", i);
-		while(scorri != NULL) {
-			printf("|%d| ", scorri->key);
-			scorri = scorri->next;
-		}
-		printf("\n");
-	}
-}
 
 
-graph* funzione_lezione(struct graph* G1, struct graph* G2, struct nodo** testa, int p){
-	int i = 0;
-	int gmax;
-	struct edge* g1, *g2;
-	
-	//Ottiene la grandezza massima tra i due grafi per darla al grafo risultante
-	if (G1->num_vertex < G2->num_vertex) {
-        gmax = G2->num_vertex;
-    } 
-	else {
-        gmax = G1->num_vertex;
+
+    //creiamo il nostro nuovo nodo dest
+    edge * newNodo = (edge *) malloc(sizeof(edge));
+    if(newNodo) {
+            newNodo->key = dest;
+            newNodo->peso = peso;
+            newNodo->next = NULL;
+            
+            if(!G->adj[start]) {
+                G->adj[start] = newNodo;
+                return;
+            }
+
+            scorri = G->adj[start];
+            while(scorri->next) {
+                scorri = scorri->next;
+            }
+            scorri->next = newNodo;
     }
-	
-	//Crea il grafo per l'unione
-	graph* G = createGraph(gmax);
-	
-	//Effettua l'unione tra i due grafi nel terzo se la somma dei pesi è quella data in input
-	while(i < gmax){
-		g1 = G1->adj[i];
-        g2 = G2->adj[i];
 
-        while (g1 != NULL) {
-        	while(g2 != NULL){
-        		
-        		if(p == (g1->peso + g2->peso)){
-        			addArco(G, i, g1->key, g1->peso);
-				}
-        			
-        		g2 = g2->next;
-			}
-        	g1 = g1->next;
-    	}
-    	
-		i++;
-	}
-	
-	
-	//Elimina un nodo della lista con valore p
-	//Elimina il nodo se si trova in testa
-	if((*testa)->elem == p) {
-		struct nodo* succ = *testa;
-		*testa = (*testa)->next;
-		free(succ);
-	}
-	else{
-		struct nodo* scorri = *testa;
-			
-		while(scorri && scorri->next) {
-			if(scorri->next->elem == p) {
-				struct nodo* tmp = scorri->next;
-				scorri->next = scorri->next->next;
-				free(tmp);
-			}
-			else 
-				scorri = scorri->next;
-			
-		}
-	}
-		
-	return G;
 }
+
+
+
+void printGraph(graph * G) {
+    
+    for(int i = 0; i < G->n_vertex; i++) {
+        edge * scorri = G->adj[i];
+        printf("lista di %d: ", i);
+        while(scorri){
+            printf("%d -> ", scorri->key);
+            scorri = scorri->next;
+        }
+        printf("NULL\n\n");
+    }
+
+}
+
+
+void deleteArco(graph * G, int start, int to_delete) {
+
+    if(!G || start < 0 || start > G->n_vertex || to_delete < 0 || to_delete > G->n_vertex) {
+        printf("parametri non validi\n");
+        return;
+    }
+
+    if(G->adj[start]->key == to_delete) {
+        //manca la free
+        G->adj[start] = G->adj[start]->next;
+        return;
+    }
+
+
+    edge * scorri = G->adj[start];
+    while(scorri) {
+        if(scorri->key == to_delete) {
+            edge * tmp = scorri;
+            scorri = scorri->next;
+            free(tmp);
+        }
+        scorri = scorri->next;
+    }
+
+}
+
+graph * unione(graph * G1, graph * G2, int p) {
+    int n_max = 0;
+
+    if (G1->n_vertex >= G2->n_vertex) {
+        n_max = G1->n_vertex;
+    } else {
+        n_max = G2->n_vertex;
+    }
+
+    graph * G3 = NULL;
+    G3 = createGraph(G3, n_max); // Crea G3 con il numero massimo di vertici
+
+    edge *scorri = NULL, *scorri2 = NULL;
+
+    for (int i = 0; i < G1->n_vertex; i++) {
+    	
+    	for (int j = 0; j < G1->n_vertex; j++) {
+
+	        scorri = G1->adj[i];
+	        scorri2 = G2->adj[j];
+	
+	        if (scorri == NULL) {
+	            if (scorri2 != NULL) {
+	                while (scorri2) {
+	                    if (p == scorri2->peso) {
+	                        addArco(G3, j, scorri2->key, scorri2->peso);
+	                    }
+	                    scorri2 = scorri2->next;
+	                }
+	            }
+	        } else if (scorri2 == NULL) {
+	            if (scorri != NULL) {
+	                while (scorri) {
+	                    if (p == scorri->peso) {
+	                        addArco(G3, i, scorri->key, scorri->peso);
+	                    }
+	                    scorri = scorri->next;
+	                }
+	            }
+	        } else {
+	            while (scorri) {
+	                while (scorri2) {
+	                    if (p == (scorri->peso + scorri2->peso)) {
+	                        addArco(G3, i, scorri->key, scorri->peso);
+	                        addArco(G3, j, scorri2->key, scorri2->peso);
+	                    }
+	                    scorri2 = scorri2->next;
+	                }
+	                scorri = scorri->next;
+	            }
+	        }
+	    }
+    }
+
+    return G3;
+}
+
+
 
 
 //Con intersezione

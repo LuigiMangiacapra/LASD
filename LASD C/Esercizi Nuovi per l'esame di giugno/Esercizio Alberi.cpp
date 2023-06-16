@@ -188,8 +188,6 @@ struct tree* elimina_radice(struct tree* radice){
 		//Se il nodo da eliminare ha due sottoalberi(figli)
 		else{//(radice->destro!=NULL && radice->sinistro!=NULL)
 			tmp=stacca_minimo(radice->destro, radice);//Trova il minimo tra i massimali (l'estremo superiore: elemento con valore prossimo alla radice, per sostituirla)
-			tmp->sinistro=radice->sinistro; // Collega il figlio sinistro della radice al minimo trovato
-			tmp->destro=radice->destro; // Collega il sottoalbero destro della radice al minimo trovato
 			radice->info=tmp->info;//sovrascrive il nodo da eliminare con quello minimo
 			free(tmp);//elimina l'elemento minimo(alla fine, sostituendo l'elemento minimo a quello da eliminare e eliminando quello minimo, si è eliminato il nodo designato)
 		}
