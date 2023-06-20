@@ -14,6 +14,7 @@ struct el *inserisci(struct el*,int);
 void visualizza_lista(struct el *lista);
 struct el* inserisci_testa(struct el* L, int valore);
 void print_lista_dopp(struct el *p, int n);
+struct el* elimina(struct el* lista, int elem);
 
 int main(){
 	struct el *lista;
@@ -21,33 +22,30 @@ int main(){
 	int liste = 1;
 	struct el* testa = NULL;
 	int n = 0;
+	int elem = 0;
 	
-	while(liste != 0){
-		printf("Specificare numero di elementi\n");
-		scanf("%d", &n);
-		lista=crea_lista(n); 
-		/*printf("\nInserisci elemento da inserire in coda: ");
-		scanf("%d", &valore);
-		lista=inserisci(lista,valore);
-		visualizza_lista(lista);
-		printf("\nInserisci elemento da inserire in testa: ");
-		scanf("%d", &valore2);
-		inserisci_testa(lista, valore2);
-		visualizza_lista(lista);*/
-		print_lista_dopp(lista, n);
-		liste--;
-	}
+	printf("Specificare numero di elementi\n");
+	scanf("%d", &n);
+	lista=crea_lista(n); 
+	visualizza_lista(lista);
+	
+	printf("Inserire l'elemento da eliminare\n");
+	scanf("%d", &elem);
+	lista = elimina(lista, elem);
+	
+	printf("\nStampa lista dopo eliminazione\n");
+	visualizza_lista(lista);
 }
 
+/*
 
-/*Lista doppiamente puntata circolare*/
 struct el *crea_lista(int n) {
     struct el *p, *punt;
     int i;
     if(n==0) {
         p = NULL;
-    } else {
-        /* creazione primo elemento */
+    } 
+	else {
         p = (struct el*)malloc(sizeof(struct el));
         printf("\nInserisci il primo valore: ");
         scanf("%d", &p->inf);
@@ -65,7 +63,7 @@ struct el *crea_lista(int n) {
     } // chiudo l'if-else
     return(p); // ritorno il puntatore alla testa
 } // chiudo la funzione
-
+*/
 
 
 /*Lista doppiamente puntata*/
@@ -128,40 +126,50 @@ void visualizza_lista(struct el *p) {
 } 
 
 
-void print_lista_dopp(struct el *p, int n) {
-	printf("\nlista ---> ");
-	int i = 0 ;
-	while(i < n){
-		
-		printf("%d", p->inf); /* visualizza l'informazione */
-		printf(" ---> ");
-		p = p->next;
-		i++; /* scorre la lista di un elemento */
-	}
-	printf("NULL\n\n"); 
-} 
-
 //inserimento in testa
 struct el* inserisci_testa(struct el* L, int valore){
-	struct el*punt;
-	if(L==NULL){
-		L=(struct el*)malloc(sizeof(struct el*));
-		L->inf=valore;
-		L->prev=NULL;
-		L->next=NULL;
-		
-	}
-	else{
-		punt=L;
-		punt=(struct el*)malloc(sizeof(struct el*));
-		punt->prev=NULL;
-		punt->inf=valore;
-		punt->next=L;
-		punt->next->prev=punt;
-		L=punt;
-		
-	}
+	struct el*punt, *new_elem;
+	
+	new_elem=(struct el*)malloc(sizeof(struct el*));
+	new_elem->inf=valore;
+	new_elem->prev=NULL;
+	new_elem->next=L;
+	L = new_elem;
+
 	return L;
+}
+
+
+struct el* elimina(struct el* lista, int elem) {
+    struct el* tmp;
+	printf("|%d| ", lista->inf);
+	//Se le due liste sono vuote o se si è arrivati con entrambe le liste a NULL
+    if (lista == NULL) {
+    	printf("NULL");
+        return lista;
+    }
+    else{
+        if (lista->inf == elem) { 
+        	tmp = lista;
+        	if(lista->prev != NULL){
+        		lista->prev->next = lista->next;
+			}
+			if(lista->next != NULL){
+				lista->next->prev = lista->prev;
+			}
+
+            lista = lista->next;
+            free(tmp);
+            
+            //lista = deleteNode(lista, elem); //Se si vogliono eliminare duplicati
+        } 
+		else {
+            lista->next = elimina(lista->next, elem);
+        }
+    }
+
+    
+    return lista;
 }
 
 

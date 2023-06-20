@@ -156,7 +156,7 @@ graph * createGraph(graph * G, int num_vertex) {
 }
 
 void addArco(graph * G, int start, int dest, int peso) {
-    if(!G || start < 0 || start > G->n_vertex || dest < 0 || dest > G->n_vertex || peso < 0) {
+    if(!G || start < 0 || start >= G->n_vertex || dest < 0 || dest >= G->n_vertex || peso < 0) {
         printf("parametri non validi\n");
         return;
     }
@@ -213,7 +213,7 @@ void printGraph(graph * G) {
 
 void deleteArco(graph * G, int start, int to_delete) {
 
-    if(!G || start < 0 || start > G->n_vertex || to_delete < 0 || to_delete > G->n_vertex) {
+    if(!G || start < 0 || start >= G->n_vertex || to_delete < 0 || to_delete >= G->n_vertex) {
         printf("parametri non validi\n");
         return;
     }

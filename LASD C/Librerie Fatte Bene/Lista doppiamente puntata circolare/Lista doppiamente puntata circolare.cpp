@@ -13,6 +13,7 @@ struct circular_elem
 
 struct circular_elem *crea_lista(int n);
 void print_lista_dopp(struct circular_elem *p, int n);
+struct circular_elem* elimina(struct circular_elem* lista, int elem);
 
 int main(){
 	struct circular_elem *lista;
@@ -20,10 +21,18 @@ int main(){
 	int liste = 1;
 	struct circular_elem* testa = NULL;
 	int n = 0;
+	int elem = 0;
 	
 	printf("Specificare numero di elemementi\n");
 	scanf("%d", &n);
 	lista=crea_lista(n); 
+	print_lista_dopp(lista, n);
+	
+	printf("Inserire l'elemento da eliminare\n");
+	scanf("%D", &elem);
+	lista = elimina(lista, elem);
+	
+	printf("\nstampa dopo l'eliminazione\n");
 	print_lista_dopp(lista, n);
 
 }
@@ -73,5 +82,34 @@ void print_lista_dopp(struct circular_elem *p, int n) {
 	printf("...\n\n"); 
 } 
 
+
+struct circular_elem* elimina(struct circular_elem* lista, int elem) {
+    struct circular_elem* tmp;
+	printf("|%d| ", lista->inf);
+	//Se le due liste sono vuote o se si è arrivati con entrambe le liste a NULL
+    if (lista == NULL) {
+    	printf("NULL");
+        return lista;
+    }
+    else{
+        if (lista->inf == elem) { 
+        	tmp = lista;
+        	
+        	lista->prev->next = lista->next;
+			lista->next->prev = lista->prev;
+
+            lista = lista->next;
+            free(tmp);
+            
+            //lista = deleteNode(lista, elem); //Se si vogliono eliminare duplicati
+        } 
+		else {
+            lista->next = elimina(lista->next, elem);
+        }
+    }
+
+    
+    return lista;
+}
 
 
