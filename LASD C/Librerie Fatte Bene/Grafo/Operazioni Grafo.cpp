@@ -135,7 +135,7 @@ int main(){
 			case 9:
 				printf("Inserisci elemento da eliminare\n");
 				scanf("%d", &v);
-				deleteVertex(G, vertex);
+				deleteVertex(G, v);
 		
 		}
 	
@@ -216,6 +216,21 @@ void g_print(graph *G){
 //Aggiunge arco
 void g_add(graph *G, int u, int v){ //u è il nodo da cui esce l'arco, v è il nodo in cui entra
 	edge *new1, *e; 
+	if(!G || u < 0 || u >= G->num_v || v < 0 || v >= G->num_v) {
+        printf("parametri non validi\n");
+        return;
+    }
+
+    //ci accertiamo che non esista gia
+    edge * scorri = G->adj[u];
+    while(scorri){
+        if(scorri->key == v) {
+            printf("arco gia esistente\n");
+            return;
+        }
+        scorri = scorri->next;
+    }
+    
 	//Aggiungere frammento di codice per controlli vari
 	new1 = (edge*)malloc(sizeof(edge));
 	if (new1==NULL) 
@@ -314,31 +329,31 @@ void deleteVertex(graph* G, int vertex) {
     
  
     //riallochiamo il vettore
-    for(i = vertex; i < G->nv-1; i++) {
+    for(i = vertex; i < G->num_v-1; i++) {
     	G->adj[i] = G->adj[i+1];
 	}
     
         
     //sempre l'ultima posizione va a null
-    G->adj[G->nv-1] = NULL;
-    G->nv -= 1;
-    G->adj = (edge **)realloc(G->adj, G->nv * sizeof(edge));
+    G->adj[G->num_v-1] = NULL;
+    G->num_v -= 1;
+    G->adj = (edge **)realloc(G->adj, G->num_v * sizeof(edge));
     
   
     //Rimuove l'elemento nelle liste di adiacenza degli altri vertici
-    for(i = 0; i < G->nv; i++){
+    for(i = 0; i < G->num_v; i++){
     	
     	edge* testa = G->adj[i];
     	if(testa != NULL){
     		//Caso elemento in testa
-    		if(testa->value == vertex){
+    		if(testa->key == vertex){
 				G->adj[i] = testa->next;
 			}
 			//caso elemento centrale
 			else {
 				edge * scorri = testa;
 				while(scorri->next) {
-					if(scorri->next->value == vertex){
+					if(scorri->next->key == vertex){
 						testa = scorri->next;
 						scorri->next = scorri->next->next;
 						

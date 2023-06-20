@@ -12,7 +12,7 @@ struct circular_elem
 };
 
 struct circular_elem *crea_lista(int n);
-void print_lista_dopp(struct circular_elem *p, int n);
+void print_lista_dopp(struct circular_elem *p);
 struct circular_elem* elimina(struct circular_elem* lista, int elem);
 
 int main(){
@@ -26,14 +26,14 @@ int main(){
 	printf("Specificare numero di elemementi\n");
 	scanf("%d", &n);
 	lista=crea_lista(n); 
-	print_lista_dopp(lista, n);
+	print_lista_dopp(lista);
 	
 	printf("Inserire l'elemento da eliminare\n");
 	scanf("%D", &elem);
 	lista = elimina(lista, elem);
 	
 	printf("\nstampa dopo l'eliminazione\n");
-	print_lista_dopp(lista, n);
+	print_lista_dopp(lista);
 
 }
 
@@ -65,28 +65,28 @@ struct circular_elem *crea_lista(int n) {
 } // chiudo la funzione
 
 
-void print_lista_dopp(struct circular_elem *p, int n) {
+void print_lista_dopp(struct circular_elem *p) {
+	struct circular_elem* curr = p;
 	printf("\nlista ---> ");
 	int i = 0 ;
 	if(p == NULL){
 		printf("La lista è vuota\n");
 		return;
 	}
-	while(i < n){
-		
-		printf("%d", p->inf); /* visualizza l'informazione */
+	do{
+		printf("%d", curr->inf);
 		printf(" ---> ");
-		p = p->next;
-		i++; /* scorre la lista di un circular_elememento */
+		curr = curr->next;
 	}
+	while(curr != p);
+	
 	printf("...\n\n"); 
 } 
 
 
 struct circular_elem* elimina(struct circular_elem* lista, int elem) {
     struct circular_elem* tmp;
-	printf("|%d| ", lista->inf);
-	//Se le due liste sono vuote o se si è arrivati con entrambe le liste a NULL
+
     if (lista == NULL) {
     	printf("NULL");
         return lista;
