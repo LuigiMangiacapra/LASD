@@ -85,12 +85,13 @@ void elimina_pari_e_dispari(struct elem** lista, struct elem** lista2) {
     if ((*lista) != NULL) {//Controlla che la lista1 non sia nulla per poter accedere all'elemento
         if ((*lista)->info % 2 == 0) {//Controlla se l'elemento è pari
             tmp = *lista;
-            *lista = (*lista)->next;
-			
-			//Imposta l'elemento precedente del successivo a NULL in quanto il precedente sarà eliminato
-            if (*lista != NULL) {
-                (*lista)->prev = NULL;
+            
+            // Riaggancio il nodo successivo con il nodo precedente
+            if (tmp->next != NULL) {
+                tmp->next->prev = tmp->prev;
             }
+            
+            *lista = (*lista)->next;
 
             free(tmp);
         } 
@@ -102,12 +103,13 @@ void elimina_pari_e_dispari(struct elem** lista, struct elem** lista2) {
     if ((*lista2) != NULL) {//Controlla che la lista1 non sia nulla per poter accedere all'elemento
         if ((*lista2)->info % 2 != 0) {//Controlla se l'elemento è dispari
             tmp2 = *lista2;
-            *lista2 = (*lista2)->next;
-			
-			//Imposta l'elemento precedente del successivo a NULL in quanto il precedente sarà eliminato
-            if (*lista2 != NULL) {
-                (*lista2)->prev = NULL;
+            
+            // Riaggancio il nodo successivo con il nodo precedente
+            if (tmp2->next != NULL) {
+                tmp2->next->prev = tmp2->prev;
             }
+            
+            *lista2 = (*lista2)->next;
 
             free(tmp2);
         } 

@@ -170,20 +170,21 @@ int trova_secondo_minimo(struct nodo* radice) {
     return padre->inf;
 }
 
+
 //trova secondo elemento minimo nell'albero (Ricorsiva)
 struct nodo* trova_secondo_minimo(struct nodo* padre, struct nodo* radice) {
 	struct nodo* ret;
     if (radice->sinistro == NULL) {
-    	printf("\npadreMinimo: %d, Minimo: %d", padre->inf, radice->inf);
+    	//printf("\npadreMinimo: %d, Minimo: %d", padre->inf, radice->inf);
         return padre; 
     }
     else{
     	
         padre = radice;
         radice = radice->sinistro;
-        printf("\nDiscesa: padre: %d, figlio: %d", padre->inf, radice->inf);
+        //printf("\nDiscesa: padre: %d, figlio: %d", padre->inf, radice->inf);
         ret = trova_secondo_minimo(padre, radice);
-        printf("\nRisalita: padre: %d, figlio: %d, PadreMinimo: %d", padre->inf, radice->inf, ret->inf);
+        //printf("\nRisalita: padre: %d, figlio: %d, PadreMinimo: %d", padre->inf, radice->inf, ret->inf);
         return ret;
     }
 }
@@ -199,30 +200,6 @@ void stampa_in_ordine(struct nodo* radice){
 			
 }
 
-/*
-//stampa l'albero in pre-ordine
-void stampa_in_pre-ordine(struct nodo* radice){
-	if(radice!=NULL){
-		printf(" |%d| ",radice->inf);
-		stampa_in_ordine(radice->sinistro);
-		stampa_in_ordine(radice->destro);
-		
-	}
-			
-}
-
-//stampa l'albero in post-ordine
-void stampa_in_post-ordine(struct nodo* radice){
-	if(radice!=NULL){
-		stampa_in_ordine(radice->sinistro);
-		stampa_in_ordine(radice->destro);
-		printf(" |%d| ",radice->inf);
-		
-	}
-			
-}
-
-*/
 
 //cancella ogni elemento dell'albero
 void cancella_albero(struct nodo* radice){
@@ -252,57 +229,6 @@ void visualizza_lista(struct elem *p) {
 	}
 	printf("NULL\n\n"); 
 } 
-
-//crea la lista
-struct elem *crea_lista(){
-	struct elem *testa, *punt;
-	int i, n;
-	printf("Specificare numero di elementi\n");
-	scanf("%d", &n);
-	
-	if(n==0){
-		testa=NULL;
-	}
-	else{
-		testa=(struct elem *)malloc(sizeof(struct elem));
-		printf("inserire primo elemento\n");
-		scanf("%d",&testa->inf);
-		punt=testa;
-		for(i=2;i<=n;i++){
-			punt->next=(struct elem *)malloc(sizeof(struct elem));
-			punt=punt->next;
-			printf("inserire il %d elemento:\n",i);
-			scanf("%d",&punt->inf);
-		
-		}
-		punt->next=NULL;
-	
-	}
-	return(testa);
-}
-
-
-//inserisce nell'albero ogni elemento dispari della lista eliminandolo dalla lista
-struct elem* sposta_dispari(struct nodo* radice,struct elem *testa){
-	struct elem* tmp;
-	
-	if(testa!=NULL){
-		
-		testa->next=sposta_dispari(radice,testa->next);//poiché l'albero viene giù modificato tramite la funzione inserisci, dobbiamo ciclare sulla lista
-		
-		if(testa->inf%2!=0){
-			radice=inserisci(radice, testa->inf);//Modifica direttamente l'albero
-			
-			//Elimina dalla lista l'elemento appena inserito nell'albero
-			tmp=testa;
-			testa=testa->next;
-			free(tmp);
-		}
-	}
-	
-	return testa;
-		
-}
 
 
 

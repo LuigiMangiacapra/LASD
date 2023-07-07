@@ -124,34 +124,34 @@ struct el* inserisci_testa(struct el* L, int valore){
 }
 
 
-void funzione_esercizio(struct el** l1, struct el** l2, int numero_elementi){
-	struct el* tmp, *new_elem;
-	
-	
-	if((*l1) != NULL || (*l2) != NULL){
-		
-		if((*l1) != NULL){
-			printf("%d\n", (*l1)->inf);
-			if((*l1)->inf == 2){
-				
-				numero_elementi+=1;
-				tmp = (*l1);
-				(*l1) = (*l1)->next;
-				free(tmp);
-				funzione_esercizio(l1, l2, numero_elementi);
-			}
-			else{
-				l1 = &((*l1)->next);
-				funzione_esercizio(l1, l2, numero_elementi);
-			}
-				
-		}
-		else if((*l2) != NULL){
-			new_elem = (struct el*)malloc(sizeof(struct el));
-			new_elem->inf = numero_elementi;
-			new_elem->next = (*l2);
-			(*l2) = new_elem;
-		}
-			
-	}
+void funzione_esercizio(struct el** l1, struct el** l2, int numero_elementi) {
+    struct el* tmp, *new_elem;
+
+    if ((*l1) != NULL) { //Entra nell'if se il contenuto di l1 non è NULL
+    	
+        if ((*l1)->inf == 2) {
+            numero_elementi += 1;
+            tmp = (*l1);
+            
+            // Riaggancio il nodo successivo con il nodo precedente
+            if (tmp->next != NULL) {
+                tmp->next->prev = tmp->prev;
+            }
+            
+            (*l1) = (*l1)->next;
+            free(tmp);
+            funzione_esercizio(l1, l2, numero_elementi);
+            
+        } else {
+            l1 = &((*l1)->next);
+            funzione_esercizio(l1, l2, numero_elementi);
+        }
+    } 
+	else if ((*l2) != NULL) { //Il secondo if parte quando si termina di scorrere la prima lista, in quanto si deve inserire il numero di '2' nella prima lista
+        new_elem = (struct el*)malloc(sizeof(struct el));
+        new_elem->inf = numero_elementi;
+        new_elem->next = (*l2);
+        (*l2) = new_elem;
+    }
 }
+
