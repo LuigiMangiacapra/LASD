@@ -14,6 +14,7 @@ struct circular_elem
 struct circular_elem *crea_lista(int n);
 void print_lista_dopp(struct circular_elem *p);
 struct circular_elem* elimina(struct circular_elem* lista, int elem);
+struct circular_elem* elimina_dup(struct circular_elem* lista, struct circular_elem* testa, int elem);
 
 int main(){
 	struct circular_elem *lista;
@@ -30,7 +31,10 @@ int main(){
 	
 	printf("Inserire l'elemento da eliminare\n");
 	scanf("%D", &elem);
-	lista = elimina(lista, elem);
+	//lista = elimina(lista, elem);
+	
+	testa = lista;
+	lista = elimina_dup(lista, testa, elem);
 	
 	printf("\nstampa dopo l'eliminazione\n");
 	print_lista_dopp(lista);
@@ -88,20 +92,15 @@ struct circular_elem* elimina(struct circular_elem* lista, int elem) {
     struct circular_elem* tmp;
 
     if (lista == NULL) {
-    	printf("NULL");
         return lista;
     }
     else{
         if (lista->inf == elem) { 
         	tmp = lista;
-        	
-        	lista->prev->next = lista->next;
-			lista->next->prev = lista->prev;
-
             lista = lista->next;
             free(tmp);
             
-            //lista = deleteNode(lista, elem); //Se si vogliono eliminare duplicati
+            //lista = elimina(lista, elem); //Se si vogliono eliminare duplicati
         } 
 		else {
             lista->next = elimina(lista->next, elem);
@@ -110,6 +109,36 @@ struct circular_elem* elimina(struct circular_elem* lista, int elem) {
 
     
     return lista;
+}
+
+
+//Elimina duplicati
+struct circular_elem* elimina_dup(struct circular_elem* lista, struct circular_elem* testa, int elem) {
+    
+    struct circular_elem* tmp;
+    
+    if(lista->next == testa){
+    	
+    	if (lista->inf == elem) {
+	    	tmp = lista;
+	        lista = lista->next;
+	        free(tmp);
+	    }
+	    return lista;
+	}
+
+    if (lista->inf == elem) {
+        tmp = lista;
+        lista = lista->next;
+        free(tmp);
+        
+        lista = elimina_dup(lista, testa, elem);
+    }
+	else{
+		
+		lista->next = elimina_dup(lista->next, testa, elem);
+	}
+    	
 }
 
 

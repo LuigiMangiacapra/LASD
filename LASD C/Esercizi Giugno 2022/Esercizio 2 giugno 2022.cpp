@@ -59,6 +59,7 @@ struct nodo* crea_nodo(struct nodo* sinistro, struct nodo* destro, int elem){
 //PROTOTIPI
 struct nodo* riconosci_ABR_e_minimo(struct nodo* radice, int x, struct nodo* radice_sub, struct nodo* min, int cont);
 struct nodo* inserisci(struct nodo* radice, int k);
+void riconosci_ABR_e_minimo_it(struct nodo* radice, int x, struct nodo* radice_sub, struct nodo* min);
 
 
 int main(){
@@ -83,8 +84,8 @@ int main(){
 	
 	printf("Digitare la radice del sottoalbero su cui cercare il minimo\n");
 	scanf("%d", &x);
-	riconosci_ABR_e_minimo(radice, x, radice_sub, min, cont);
-	
+	//riconosci_ABR_e_minimo(radice, x, radice_sub, min, cont);
+	riconosci_ABR_e_minimo_it(radice, x, radice_sub, min);
 	
 }
 
@@ -124,24 +125,24 @@ struct nodo* riconosci_ABR_e_minimo(struct nodo* radice, int x, struct nodo* rad
 		if(radice->inf == x){//nodo radice su cui trovare il minimo trovato
 			
 			radice_sub = radice;//radice_sub punta al nodo radice del sottoalbero su cui cercare il minimo
-			//printf("radice_sub: %d\n", radice_sub->inf);
 		}
 		
 		if(radice_sub != NULL){//se radice_sub punta ad un nodo
+		
 			if(radice_sub == radice){//se radice_sub è stato assegnato come radice del sottoalbero
 				
 				min = radice_sub->sinistro;//min serve per scorrere sui figli sinistri e trovare il minimo
-				//printf("min_rad: %d\n", min->inf);
+				
 			}
 			if(min != NULL){
 				
 				if(min->sinistro == NULL){//il controllo va fatto prima della chiamata perché altrimenti non viene passato cont agli altri stack di attivazione
-					//printf("cont: %d\n", cont);
+					
 					cont++;//serve per considerare solo le chiamate ricorsive a sinistra finché non trova il minimo
 				}
 				
 				if(min->sinistro != NULL && cont == 0){//se non è stato trovato il minimo
-					//printf("min: %d\n", min->inf);
+					
 					riconosci_ABR_e_minimo(radice->sinistro, x, radice_sub, min->sinistro, cont);
 				}
 			}
@@ -177,4 +178,6 @@ struct nodo* riconosci_ABR_e_minimo(struct nodo* radice, int x, struct nodo* rad
 	
 		
 }
+
+
 

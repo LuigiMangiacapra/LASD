@@ -1,4 +1,11 @@
 
+/*
+Date due liste doppiamente concatenate,l1 ed l2, fare le seguenti cose:
+a) eliminare da l1 i negativi ed inserirli in testa ad l2
+b) eliminare da l2 i positivi ed inserirli in testa ad l1
+c) restituire le due liste così modificate.
+*/
+
 #include <stdio.h>
 #include <malloc.h>
 
@@ -15,26 +22,35 @@ void visualizza_lista(struct el *lista);
 struct el* inserisci_testa(struct el* L, int valore);
 void print_lista_dopp(struct el *p, int n);
 struct el* elimina(struct el* lista, int elem);
+void esercizio(struct el** l1, struct el** l2, struct el** testa1);
 
 int main(){
-	struct el *lista;
+	struct el *lista = NULL, *lista2 = NULL;
 	int valore,valore2;
 	int liste = 1;
 	struct el* testa = NULL;
-	int n = 0;
+	int n = 0, n2 = 0;
 	int elem = 0;
+	struct el* testa1 = NULL;
 	
 	printf("Specificare numero di elementi\n");
 	scanf("%d", &n);
 	lista=crea_lista(n); 
 	visualizza_lista(lista);
 	
-	printf("Inserire l'elemento da eliminare\n");
-	scanf("%d", &elem);
-	lista = elimina(lista, elem);
+	printf("Specificare numero di elementi\n");
+	scanf("%d", &n2);
+	lista2=crea_lista(n2); 
+	visualizza_lista(lista2);
 	
-	printf("\nStampa lista dopo eliminazione\n");
-	visualizza_lista(lista);
+	
+	testa1 = lista;
+	esercizio(&lista, &lista2, &testa1);
+	
+	
+	printf("\nStampa lista dopo modifiche\n");
+	visualizza_lista(testa1);
+	visualizza_lista(lista2);
 }
 
 /*
@@ -151,6 +167,13 @@ struct el* elimina(struct el* lista, int elem) {
     else{
         if (lista->inf == elem) { 
         	tmp = lista;
+        	if(lista->prev != NULL){
+        		lista->prev->next = lista->next;
+			}
+			if(lista->next != NULL){
+				lista->next->prev = lista->prev;
+			}
+
             lista = lista->next;
             free(tmp);
             
@@ -163,6 +186,58 @@ struct el* elimina(struct el* lista, int elem) {
 
     
     return lista;
+}
+
+
+
+void esercizio(struct el** l1, struct el** l2, struct el** testa1) {
+    if (*l1 != NULL) {
+    	
+        if ((*l1)->inf < 0) {
+        	
+            struct el* tmp = *l1;
+            *l1 = (*l1)->next;
+
+            struct el* new_elem = (struct el*)malloc(sizeof(struct el));
+            new_elem->inf = tmp->inf;
+            new_elem->prev = NULL;
+            new_elem->next = *l2;
+            
+            *l2 = new_elem;
+            free(tmp);
+
+            esercizio(l1, l2, testa1);
+        } 
+		else {
+			
+            l1 = &(*l1)->next;
+            esercizio(l1, l2, testa1);
+        }
+    }
+	else if (*l2 != NULL) {
+		
+        if ((*l2)->inf > 0) {
+        	
+            struct el* tmp = *l2;
+            *l2 = (*l2)->next;
+
+            struct el* new_elem = (struct el*)malloc(sizeof(struct el));
+            new_elem->inf = tmp->inf;
+            new_elem->prev = NULL;
+            new_elem->next = *testa1;
+            
+            *testa1 = new_elem;
+            free(tmp);
+
+            esercizio(l1, l2, testa1);
+            
+        } 
+		else {
+			
+            l2 = &(*l2)->next;
+            esercizio(l1, l2, testa1);
+        }
+    }
 }
 
 

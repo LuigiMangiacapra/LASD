@@ -288,7 +288,7 @@ graph * unione(graph * G1, graph * G2, int p) {
 	                scorri = scorri->next;
 	            }
 	        }
-	    }
+		}
     }
 
     return G3;

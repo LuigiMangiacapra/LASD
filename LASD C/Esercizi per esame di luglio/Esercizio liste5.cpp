@@ -1,5 +1,4 @@
-/*Creare una funzione in cui si eliminano tutte le occorrenze di 2 nella prima lista e si inserisce in testa il numero delle occorrenze di 2*/
-
+/*creare una funzione che elimini tutti gli elementi duplicati rimanendone una sola occorrenza*/
 
 #include <stdio.h>
 #include <malloc.h>
@@ -16,38 +15,39 @@ struct el *inserisci(struct el*,int);
 void visualizza_lista(struct el *lista);
 struct el* inserisci_testa(struct el* L, int valore);
 void print_lista_dopp(struct el *p, int n);
-void funzione_esercizio(struct el** l1, struct el** l2, int numero_elementi);
+struct el* elimina(struct el* lista, int elem);
+void esercizio(struct el* curr);
+
 
 int main(){
-	struct el *lista, *lista2;
+	struct el *lista = NULL, *lista2 = NULL;
 	int valore,valore2;
 	int liste = 1;
 	struct el* testa = NULL;
 	int n = 0, n2 = 0;
 	int elem = 0;
-	int numero_elementi = 0;
+	struct el* testa1 = NULL;
 	
-	printf("Specificare numero di elementi prima lista\n");
+	printf("Specificare numero di elementi\n");
 	scanf("%d", &n);
 	lista=crea_lista(n); 
 	visualizza_lista(lista);
 	
-	printf("Specificare numero di elementi seconda lista\n");
+	/*printf("Specificare numero di elementi\n");
 	scanf("%d", &n2);
 	lista2=crea_lista(n2); 
 	visualizza_lista(lista2);
+	*/
+
+	
+	esercizio(lista);
 	
 	
-	funzione_esercizio(&lista, &lista2, numero_elementi);
-	
-	
-	printf("\nStampa lista1\n");
+	printf("\nStampa lista dopo modifiche\n");
 	visualizza_lista(lista);
-	
-	printf("\nStampa lista2\n");
-	visualizza_lista(lista2);
-	
+	//visualizza_lista(lista2);
 }
+
 
 
 /*Lista doppiamente puntata*/
@@ -123,38 +123,58 @@ struct el* inserisci_testa(struct el* L, int valore){
 	return L;
 }
 
-// I doppi puntatori servono perché quello da passare normalmente sarebbe un puntatore singolo della testa della lista, ma poiché i riferimenti si perderebbero facilmente
-// si aggiunge un altro puntatore. E' come nel caso di interi o elementi semplici se passati direttamente vengono passati per copia altrimenti per riferimento. Lo stesso vale per i puntatori.
-// Se passiamo direttamente il puntatore alla testa di una lista, verrà passata la lista per copia e ogni modifica rimarrà nella funzione in cui la lista è passata. 
-// Se invece passiamo un doppio puntatore, il puntatore della testa della lista viene passato per riferimento e quindi modificabile anche all'interno della funzione
 
-void funzione_esercizio(struct el** l1, struct el** l2, int numero_elementi) {
-    struct el* tmp, *new_elem;
+struct el* elimina(struct el* lista, int elem) {
+    struct el* tmp;
+	printf("|%d| ", lista->inf);
+	//Se le due liste sono vuote o se si è arrivati con entrambe le liste a NULL
+    if (lista == NULL) {
+    	printf("NULL");
+        return lista;
+    }
+    else{
+        if (lista->inf == elem) { 
+        	tmp = lista;
+        	if(lista->prev != NULL){
+        		lista->prev->next = lista->next;
+			}
+			if(lista->next != NULL){
+				lista->next->prev = lista->prev;
+			}
 
-    if ((*l1) != NULL) { //Entra nell'if se il contenuto di l1 non è NULL
-    	
-        if ((*l1)->inf == 2) {
-            numero_elementi += 1;
-            tmp = (*l1);
-            
-            // Riaggancio il nodo successivo con il nodo precedente
-            if (tmp->next != NULL) {
-                tmp->next->prev = tmp->prev;
-            }
-            
-            (*l1) = (*l1)->next;
+            lista = lista->next;
             free(tmp);
-            funzione_esercizio(l1, l2, numero_elementi);
             
-        } else {
-            l1 = &((*l1)->next);
-            funzione_esercizio(l1, l2, numero_elementi);
+            //lista = deleteNode(lista, elem); //Se si vogliono eliminare duplicati
+        } 
+		else {
+            lista->next = elimina(lista->next, elem);
         }
+    }
+
+    
+    return lista;
+}
+
+
+
+void esercizio(struct el* curr) {
+    struct el* nextNode;
+
+    if (curr == NULL) {
+        return;
+    }
+
+    if (curr->next != NULL && curr->inf == curr->next->inf) {
+        nextNode = curr->next->next;
+        free(curr->next);
+        curr->next = nextNode;
+        esercizio(curr);
     } 
-	else if ((*l2) != NULL) { //Il secondo if parte quando si termina di scorrere la prima lista, in quanto si deve inserire il numero di '2' nella prima lista
-        new_elem = (struct el*)malloc(sizeof(struct el));
-        new_elem->inf = numero_elementi;
-        new_elem->next = (*l2);
-        (*l2) = new_elem;
+	else {
+        esercizio(curr->next);
     }
 }
+
+
+

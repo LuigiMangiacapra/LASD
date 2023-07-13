@@ -1,4 +1,5 @@
-/*Creare una funzione in cui si eliminano tutte le occorrenze di 2 nella prima lista e si inserisce in testa il numero delle occorrenze di 2*/
+
+/*Eliminare nella prima lista tutti gli elementi in posizione dispari e inserire la media in coda alla seconda lista*/
 
 
 #include <stdio.h>
@@ -15,8 +16,7 @@ struct el *crea_lista(int n);
 struct el *inserisci(struct el*,int);
 void visualizza_lista(struct el *lista);
 struct el* inserisci_testa(struct el* L, int valore);
-void print_lista_dopp(struct el *p, int n);
-void funzione_esercizio(struct el** l1, struct el** l2, int numero_elementi);
+void esercizio(struct el** l1, struct el** l2, int pos, int somma, int media, int n_elem);
 
 int main(){
 	struct el *lista, *lista2;
@@ -25,28 +25,28 @@ int main(){
 	struct el* testa = NULL;
 	int n = 0, n2 = 0;
 	int elem = 0;
-	int numero_elementi = 0;
+	int pos = 0;
+	int somma = 0;
+	int media = 0;
 	
-	printf("Specificare numero di elementi prima lista\n");
+	printf("Creazione prima lista\n");
+	printf("Specificare numero di elementi\n");
 	scanf("%d", &n);
 	lista=crea_lista(n); 
 	visualizza_lista(lista);
 	
-	printf("Specificare numero di elementi seconda lista\n");
+	printf("\nCreazione seconda lista\n");
+	printf("Specificare numero di elementi\n");
 	scanf("%d", &n2);
-	lista2=crea_lista(n2); 
+	lista2=crea_lista(n2);
 	visualizza_lista(lista2);
 	
 	
-	funzione_esercizio(&lista, &lista2, numero_elementi);
+	esercizio(&lista, &lista2, pos, somma, media, 1);
 	
-	
-	printf("\nStampa lista1\n");
+	printf("Stampa liste dopo modifiche\n");
 	visualizza_lista(lista);
-	
-	printf("\nStampa lista2\n");
 	visualizza_lista(lista2);
-	
 }
 
 
@@ -123,38 +123,50 @@ struct el* inserisci_testa(struct el* L, int valore){
 	return L;
 }
 
-// I doppi puntatori servono perché quello da passare normalmente sarebbe un puntatore singolo della testa della lista, ma poiché i riferimenti si perderebbero facilmente
-// si aggiunge un altro puntatore. E' come nel caso di interi o elementi semplici se passati direttamente vengono passati per copia altrimenti per riferimento. Lo stesso vale per i puntatori.
-// Se passiamo direttamente il puntatore alla testa di una lista, verrà passata la lista per copia e ogni modifica rimarrà nella funzione in cui la lista è passata. 
-// Se invece passiamo un doppio puntatore, il puntatore della testa della lista viene passato per riferimento e quindi modificabile anche all'interno della funzione
 
-void funzione_esercizio(struct el** l1, struct el** l2, int numero_elementi) {
-    struct el* tmp, *new_elem;
+void esercizio(struct el** l1, struct el** l2, int pos, int somma, int media, int n_elem){
 
-    if ((*l1) != NULL) { //Entra nell'if se il contenuto di l1 non è NULL
-    	
-        if ((*l1)->inf == 2) {
-            numero_elementi += 1;
-            tmp = (*l1);
+	struct el* tmp;
+	
+	if((*l1) != NULL){
+		pos++;
+		
+		if(pos % 2 != 0){
+			n_elem++;
+			somma+= (*l1)->inf;
+			tmp = (*l1);
+			
+			if(tmp->next != NULL){
+				tmp->next->prev = tmp->prev;
+			}
             
-            // Riaggancio il nodo successivo con il nodo precedente
-            if (tmp->next != NULL) {
-                tmp->next->prev = tmp->prev;
-            }
-            
-            (*l1) = (*l1)->next;
+            if((*l1)->next == NULL){
+				media = (somma + (*l1)->inf)/n_elem;
+			}
+			
+			(*l1) = (*l1)->next;
             free(tmp);
-            funzione_esercizio(l1, l2, numero_elementi);
             
-        } else {
-            l1 = &((*l1)->next);
-            funzione_esercizio(l1, l2, numero_elementi);
-        }
-    } 
-	else if ((*l2) != NULL) { //Il secondo if parte quando si termina di scorrere la prima lista, in quanto si deve inserire il numero di '2' nella prima lista
-        new_elem = (struct el*)malloc(sizeof(struct el));
-        new_elem->inf = numero_elementi;
-        new_elem->next = (*l2);
-        (*l2) = new_elem;
-    }
+			esercizio(l1, l2, pos, somma, media, n_elem);
+		}
+		else{
+			l1 = &((*l1)->next);
+			esercizio(l1, l2, pos, somma, media, n_elem);
+		}
+				
+		
+	}	
+	else if((*l2) != NULL){
+		struct el* new_elem = (struct el*)malloc(sizeof(struct el));
+		new_elem->inf = media;
+		new_elem->next = NULL;
+		
+		esercizio(l1, &(*l2)->next, pos, somma, media, n_elem);
+		
+		if((*l2)->next == NULL)
+			(*l2)->next = new_elem;
+	}
+	
 }
+
+
