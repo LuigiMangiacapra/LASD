@@ -60,16 +60,21 @@ struct nodo* crea_nodo(struct nodo* sinistro, struct nodo* destro, int elem){
 struct nodo* riconosci_ABR_e_minimo(struct nodo* radice, int x, struct nodo* radice_sub, struct nodo* min, int cont);
 struct nodo* inserisci(struct nodo* radice, int k);
 void riconosci_ABR_e_minimo_it(struct nodo* radice, int x, struct nodo* radice_sub, struct nodo* min);
+int riconosci_ABR_e_minimo2(struct nodo** radice, int x, struct nodo** radice_sub, int is_bst, int min, int count);
+void stampa_albero(struct nodo* radice);
 
 
 int main(){
 	struct nodo* radice=NULL;//Mettere sempre NULL
 	struct nodo* radice_sub=NULL;
-	struct nodo* min=NULL;
+	//struct nodo* min=NULL;
+	int min = 0;
 	int cont = 0;
 	int n,k=0,count=0,scelta,cerca;
 	struct elem* p=NULL,*testa=NULL;
 	int x = 0;
+	int is_bst = 0;
+	int count2 = 0;
 	
 	printf("Quanti elementi vuoi inserire?\n");
 	scanf("%d",&n);
@@ -80,13 +85,25 @@ int main(){
 		scanf("%d",&k);
 		radice=inserisci(radice, k);
 		n--;
-	}		
+	}
 	
-	printf("Digitare la radice del sottoalbero su cui cercare il minimo\n");
+	printf("Stampa albero\n");		
+	stampa_albero(radice);
+	
+	
+	printf("\nDigitare la radice del sottoalbero su cui cercare il minimo\n");
 	scanf("%d", &x);
 	//riconosci_ABR_e_minimo(radice, x, radice_sub, min, cont);
-	riconosci_ABR_e_minimo_it(radice, x, radice_sub, min);
+	//riconosci_ABR_e_minimo_it(radice, x, radice_sub, min);
 	
+	radice_sub = radice;
+	min = riconosci_ABR_e_minimo2(&radice, x, &radice_sub, is_bst, min, count2);
+	
+	printf("L'albero e' un ABR e il minimo del sottoalbero radicato in %d e': %d\n", x, min);
+	
+	printf("Stampa albero dopo modifiche\n");		
+	stampa_albero(radice);
+	printf("\nIl valore minimo %d e' stato eliminato\n", min);
 }
 
 //inserisce nodo nell'albero 
@@ -104,80 +121,50 @@ struct nodo* inserisci(struct nodo* radice, int k){
 }
 
 
-struct nodo* riconosci_ABR_e_minimo(struct nodo* radice, int x, struct nodo* radice_sub, struct nodo* min, int cont){
-	
-	//Scorre ogni nodo dell'albero
+void stampa_albero(struct nodo* radice){
 	if(radice != NULL){
-		
-		//Se il figlio destro di un nodo ha un valore maggiore del padre, allora non è un ABR
-		if(radice->destro != NULL && radice->destro->inf < radice->inf){
-			printf("No\n");
-			return radice;
-		}
-		//Se il figlio sinistro di un nodo ha un valore minore del padre, allora non è un ABR
-		else if(radice->sinistro != NULL && radice->sinistro->inf > radice->inf){
-			printf("No\n");
-			return radice;
-		}
-		//Se per ora l'albero sembra essere un ABR allora calcoliamo il minimo a partire da una sottoradice
-		//printf("node: %d\n", radice->inf);
-		
-		if(radice->inf == x){//nodo radice su cui trovare il minimo trovato
-			
-			radice_sub = radice;//radice_sub punta al nodo radice del sottoalbero su cui cercare il minimo
-		}
-		
-		if(radice_sub != NULL){//se radice_sub punta ad un nodo
-		
-			if(radice_sub == radice){//se radice_sub è stato assegnato come radice del sottoalbero
-				
-				min = radice_sub->sinistro;//min serve per scorrere sui figli sinistri e trovare il minimo
-				
-			}
-			if(min != NULL){
-				
-				if(min->sinistro == NULL){//il controllo va fatto prima della chiamata perché altrimenti non viene passato cont agli altri stack di attivazione
-					
-					cont++;//serve per considerare solo le chiamate ricorsive a sinistra finché non trova il minimo
-				}
-				
-				if(min->sinistro != NULL && cont == 0){//se non è stato trovato il minimo
-					
-					riconosci_ABR_e_minimo(radice->sinistro, x, radice_sub, min->sinistro, cont);
-				}
-			}
-		}
-		
-		radice->sinistro = riconosci_ABR_e_minimo(radice->sinistro, x, radice_sub, min, cont);
-		
-		radice->destro = riconosci_ABR_e_minimo(radice->destro, x, radice_sub, min, cont);
-		
-		if(min != NULL && cont == 1){
-			if(min->sinistro == NULL){
-				cont++;
-				riconosci_ABR_e_minimo(radice, x, radice_sub, min, cont);//serve per far stampare una sola volta non facendo entrare più nell'if perché cont > 1
-				printf("Si, %d\n", min->inf); 
-			}
-				
-		}
-			
-		
-		
-	    /* iterativo
-		if(radice->inf == x){//nodo radicetrovato
-			radice_sub = radice; 
-			while(radice_sub->sinistro != NULL){
-				radice_sub = radice_sub->sinistro;
-			}
-			printf("Si, %d\n", radice_sub->inf); 
-		}*/
-			
+		stampa_albero(radice->sinistro);
+		printf("|%d| ", radice->inf);
+		stampa_albero(radice->destro);
 	}
-	
-	return radice;
-	
-		
 }
+
+
+int riconosci_ABR_e_minimo2(struct nodo** radice, int x, struct nodo** radice_sub, int is_bst, int min, int count) {
+	struct nodo* tmp;
+	if (*radice == NULL || *radice_sub == NULL) {
+		is_bst = 1;
+		return min;
+	}
+
+	if ((*radice)->destro != NULL && (*radice)->destro->inf < (*radice)->inf) {
+		printf("L'albero non è un ABR\n");
+		return min;
+	}
+
+	else if ((*radice)->sinistro != NULL && (*radice)->sinistro->inf > (*radice)->inf) {
+		printf("L'albero non è un ABR\n");
+		return min;
+	}
+
+	if ((*radice)->inf == x) {
+		*radice_sub = *radice;
+		count++;
+	}
+
+	min = riconosci_ABR_e_minimo2(&((*radice)->sinistro), x, &((*radice_sub)->sinistro), is_bst, min, count);
+
+	min = riconosci_ABR_e_minimo2(&((*radice)->destro), x, radice_sub, is_bst, min, count);
+
+	if ((*radice_sub)->sinistro == NULL && (*radice_sub)->destro == NULL && count == 1) {
+		min = (*radice_sub)->inf;
+		free(*radice_sub);  // Elimina l'elemento quando entrambi i figli sono NULL
+		*radice_sub = NULL;  // Imposta il puntatore del nodo eliminato a NULL
+		
+	}
+	return min;
+}
+
 
 
 

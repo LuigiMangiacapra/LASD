@@ -130,6 +130,7 @@ int sum(struct el* head) {
 
 
 int replaceOddElements(struct el* head, struct el* curr, int sum) {
+	
     if (head == NULL)
         return sum;
 
@@ -139,15 +140,14 @@ int replaceOddElements(struct el* head, struct el* curr, int sum) {
 	}
     
     sum += curr->inf;
-
-    sum = replaceOddElements(head, curr->next, sum);
+    
+	sum = replaceOddElements(head, curr->next, sum);
     
     if (curr->inf % 2 != 0){
     	curr->inf = sum - curr->inf;
-    	sum = replaceOddElements(head, curr->next, sum);
 	}
         
-        
+    return sum;
     
 }
 
