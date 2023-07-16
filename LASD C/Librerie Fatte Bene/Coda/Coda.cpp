@@ -121,7 +121,7 @@ int dequeue(int Q[])
 {
 	int valore = Q[Q[0]];
 	Q[0] = (Q[0] % MAX) + 1;
-	if (Q[0] == Q[MAX+1]) {//permette di aggiornate Q[0] a 0 quando la coda è stata completamente riempita o completamente svuotata in cui i due indici coincidono
+	if (Q[0] == Q[MAX+1]) {//permette di aggiornate Q[0] a 0 quando la coda è stata completamente svuotata in cui i due indici coincidono
 							//se i due indici coincidono vuol dire che la coda è completamente vuota o completamente piena perché ciclicamente il dequeue e l'enqueue
 							//agiscono sugli indici e bisogna reinizializzare il primo indice a 0 e l'ultimo a 1 perché si annullano a vicenda
 		Q[0] = 0; 

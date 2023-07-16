@@ -13,7 +13,7 @@ struct circular_elem
 
 struct circular_elem *crea_lista(int n);
 void print_lista_dopp(struct circular_elem *p);
-struct circular_elem* elimina(struct circular_elem* lista, int elem);
+struct circular_elem* elimina(struct circular_elem* lista, struct circular_elem* testa, int elem);
 struct circular_elem* elimina_dup(struct circular_elem* lista, struct circular_elem* testa, int elem);
 
 int main(){
@@ -23,6 +23,7 @@ int main(){
 	struct circular_elem* testa = NULL;
 	int n = 0;
 	int elem = 0;
+	int eliminato = 0;
 	
 	printf("Specificare numero di elemementi\n");
 	scanf("%d", &n);
@@ -31,10 +32,11 @@ int main(){
 	
 	printf("Inserire l'elemento da eliminare\n");
 	scanf("%D", &elem);
-	//lista = elimina(lista, elem);
 	
 	testa = lista;
-	lista = elimina_dup(lista, testa, elem);
+	
+	lista = elimina(lista, testa, elem);
+	//lista = elimina_dup(lista, testa, elem);
 	
 	printf("\nstampa dopo l'eliminazione\n");
 	print_lista_dopp(lista);
@@ -88,36 +90,12 @@ void print_lista_dopp(struct circular_elem *p) {
 } 
 
 
-struct circular_elem* elimina(struct circular_elem* lista, int elem) {
-    struct circular_elem* tmp;
-
-    if (lista == NULL) {
-        return lista;
-    }
-    else{
-        if (lista->inf == elem) { 
-        	tmp = lista;
-            lista = lista->next;
-            free(tmp);
-            
-            //lista = elimina(lista, elem); //Se si vogliono eliminare duplicati
-        } 
-		else {
-            lista->next = elimina(lista->next, elem);
-        }
-    }
-
-    
-    return lista;
-}
-
-
-//Elimina duplicati
-struct circular_elem* elimina_dup(struct circular_elem* lista, struct circular_elem* testa, int elem) {
+struct circular_elem* elimina(struct circular_elem* lista, struct circular_elem* testa, int elem) {
     
     struct circular_elem* tmp;
     
-    if(lista->next == testa){
+    //CASO BASE
+    if (lista->next == testa){
     	
     	if (lista->inf == elem) {
 	    	tmp = lista;
@@ -127,6 +105,41 @@ struct circular_elem* elimina_dup(struct circular_elem* lista, struct circular_e
 	    return lista;
 	}
 
+	//FASE RICORSIVA
+    if (lista->inf == elem) {
+        tmp = lista;
+        lista = lista->next;
+        free(tmp);
+        
+    }
+	else{
+		
+		lista->next = elimina(lista->next, testa, elem);
+	}
+    	
+    return lista;
+}
+
+
+
+
+//Elimina duplicati
+struct circular_elem* elimina_dup(struct circular_elem* lista, struct circular_elem* testa, int elem) {
+    
+    struct circular_elem* tmp;
+    
+    //CASO BASE
+    if (lista->next == testa){
+    	
+    	if (lista->inf == elem) {
+	    	tmp = lista;
+	        lista = lista->next;
+	        free(tmp);
+	    }
+	    return lista;
+	}
+
+	//FASE RICORSIVA
     if (lista->inf == elem) {
         tmp = lista;
         lista = lista->next;
@@ -139,6 +152,7 @@ struct circular_elem* elimina_dup(struct circular_elem* lista, struct circular_e
 		lista->next = elimina_dup(lista->next, testa, elem);
 	}
     	
+    return lista;
 }
 
 

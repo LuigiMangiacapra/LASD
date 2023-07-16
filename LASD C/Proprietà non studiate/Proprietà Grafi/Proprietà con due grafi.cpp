@@ -324,23 +324,23 @@ graph* intersezione(graph* G1, graph* G2) {
 //Con differenza
 graph* differenza(graph* G1, graph* G2) {
     int i = 0;
-    int gmin;
+    int gmax;
     struct edge* g1, *g2;
-    struct edge* e, *e2;
+    struct edge* e, *e2; 
     int flag = 0;
     
     // Ottiene la grandezza massima tra i due grafi per darla al grafo risultante
-    if (G1->n_vertex > G2->n_vertex) {
-        gmin = G1->n_vertex;
+    if (G1->n_vertex < G2->n_vertex) {
+        gmax = G1->n_vertex;
     } 
     else {
-        gmin = G2->n_vertex;
+        gmax = G2->n_vertex;
     }
     
     // Crea il grafo per l'intersezione
-    graph* G3 = createGraph(gmin);
+    graph* G3 = createGraph(gmax);
     
-    for(i = 0; i < gmin; i++){
+    for(i = 0; i < gmax; i++){
     	flag = 0;
     	e = G1->adj[i];
     	

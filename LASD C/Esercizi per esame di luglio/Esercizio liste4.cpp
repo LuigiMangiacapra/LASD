@@ -53,34 +53,6 @@ int main(){
 	visualizza_lista(lista2);
 }
 
-/*
-
-struct el *crea_lista(int n) {
-    struct el *p, *punt;
-    int i;
-    if(n==0) {
-        p = NULL;
-    } 
-	else {
-        p = (struct el*)malloc(sizeof(struct el));
-        printf("\nInserisci il primo valore: ");
-        scanf("%d", &p->inf);
-        punt = p;
-        p->prev = NULL;
-        for(i=2; i<=n; i++) {
-            punt->next = (struct el *)malloc(sizeof(struct el));
-            punt->next->prev = punt;
-            punt = punt->next;
-            printf("\nInserisci il %d elemento: ", i);
-            scanf("%d", &punt->inf);
-        } // chiudo il for
-        punt->next = p; // lista circolare: l'ultimo elemento punta alla testa
-        p->prev = punt; // la testa punta all'ultimo elemento
-    } // chiudo l'if-else
-    return(p); // ritorno il puntatore alla testa
-} // chiudo la funzione
-*/
-
 
 /*Lista doppiamente puntata*/
 struct el *crea_lista(int n) {
@@ -193,6 +165,8 @@ struct el* elimina(struct el* lista, int elem) {
 void esercizio(struct el** l1, struct el** l2, struct el** testa1) {
     if (*l1 != NULL) {
     	
+    	
+    	//Elimina tutti i negativi da l1 e li inserisce in testa ad l2
         if ((*l1)->inf < 0) {
         	
             struct el* tmp = *l1;
@@ -216,6 +190,7 @@ void esercizio(struct el** l1, struct el** l2, struct el** testa1) {
     }
 	else if (*l2 != NULL) {
 		
+		//Elimina tutti i positivi da l2 e li inserisce in testa ad l1, poiché la testa di l1 è cambiata durante lo scorrimento allora si usa un altro puntatore in input alla funzione
         if ((*l2)->inf > 0) {
         	
             struct el* tmp = *l2;

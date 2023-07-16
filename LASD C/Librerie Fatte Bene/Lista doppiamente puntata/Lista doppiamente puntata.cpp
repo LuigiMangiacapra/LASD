@@ -37,34 +37,6 @@ int main(){
 	visualizza_lista(lista);
 }
 
-/*
-
-struct el *crea_lista(int n) {
-    struct el *p, *punt;
-    int i;
-    if(n==0) {
-        p = NULL;
-    } 
-	else {
-        p = (struct el*)malloc(sizeof(struct el));
-        printf("\nInserisci il primo valore: ");
-        scanf("%d", &p->inf);
-        punt = p;
-        p->prev = NULL;
-        for(i=2; i<=n; i++) {
-            punt->next = (struct el *)malloc(sizeof(struct el));
-            punt->next->prev = punt;
-            punt = punt->next;
-            printf("\nInserisci il %d elemento: ", i);
-            scanf("%d", &punt->inf);
-        } // chiudo il for
-        punt->next = p; // lista circolare: l'ultimo elemento punta alla testa
-        p->prev = punt; // la testa punta all'ultimo elemento
-    } // chiudo l'if-else
-    return(p); // ritorno il puntatore alla testa
-} // chiudo la funzione
-*/
-
 
 /*Lista doppiamente puntata*/
 struct el *crea_lista(int n) {
@@ -104,7 +76,7 @@ struct el *inserisci(struct el *p, int valore)
 	}
 	else {
 		testa=p;
-		if (p->next!= NULL) 
+		if (p->next != NULL) 
 			inserisci(p->next, valore);
 		nuovo=(struct el *)malloc(sizeof(struct el));
 		nuovo->prev=p;
@@ -142,19 +114,17 @@ struct el* inserisci_testa(struct el* L, int valore){
 
 struct el* elimina(struct el* lista, int elem) {
     struct el* tmp;
-	printf("|%d| ", lista->inf);
 	//Se le due liste sono vuote o se si è arrivati con entrambe le liste a NULL
     if (lista == NULL) {
-    	printf("NULL");
         return lista;
     }
     else{
-        if (lista->inf == elem) { 
+        if (lista->inf == elem) {
         	tmp = lista;
             lista = lista->next;
             free(tmp);
             
-            //lista = deleteNode(lista, elem); //Se si vogliono eliminare duplicati
+            //lista = elimina(lista, elem); //Se si vogliono eliminare duplicati
         } 
 		else {
             lista->next = elimina(lista->next, elem);
@@ -164,5 +134,6 @@ struct el* elimina(struct el* lista, int elem) {
     
     return lista;
 }
+
 
 

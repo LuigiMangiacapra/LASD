@@ -418,7 +418,7 @@ int arco_peso_max(graph *G){
 //Calcolo dell arco con peso minore
 int arco_peso_min(graph *G){
 	edge *e;
-	int pesomax=0;
+	int pesomax=100000;
 	for(int i=0; i<G->num_v; i++){
 		e=G->adj[i];
 		while(e!=NULL){

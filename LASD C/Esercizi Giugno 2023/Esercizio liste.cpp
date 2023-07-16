@@ -136,12 +136,6 @@ void funzione_esercizio(struct el** l1, struct el** l2, int numero_elementi) {
         if ((*l1)->inf == 2) {
             numero_elementi += 1;
             tmp = (*l1);
-            
-            // Riaggancio il nodo successivo con il nodo precedente
-            if (tmp->next != NULL) {
-                tmp->next->prev = tmp->prev;
-            }
-            
             (*l1) = (*l1)->next;
             free(tmp);
             funzione_esercizio(l1, l2, numero_elementi);

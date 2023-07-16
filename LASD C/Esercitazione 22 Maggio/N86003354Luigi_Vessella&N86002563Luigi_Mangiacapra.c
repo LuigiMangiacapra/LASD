@@ -64,8 +64,8 @@ int main() {
     printf("quanti archi vuoi inserire in G1: ");
     scanf("%d", &n_archi);
 
-    
-    for(int i = 0; i < n_archi; i++) {
+    int i;
+    for(i = 0; i < n_archi; i++) {
         int start, dest, peso;
         printf("start:");
         scanf("%d", &start);
@@ -85,8 +85,9 @@ int main() {
 
     printf("quanti archi vuoi inserire in G2: ");
     scanf("%d", &n_archi2);
-
-    for(int i = 0; i < n_archi2; i++) {
+	
+	int j;
+    for(j = 0; j < n_archi2; j++) {
         int start, dest, peso;
         printf("start:");
         scanf("%d", &start);
@@ -117,6 +118,7 @@ int main() {
 
 
 graph * createGraph(graph * G, int num_vertex) {
+	int i;
     if(num_vertex < 0) {
         perror("numero vertici non valido");
         exit(1);
@@ -135,7 +137,7 @@ graph * createGraph(graph * G, int num_vertex) {
             G->adj = (edge **) malloc(num_vertex * sizeof(edge));
             if(G->adj) {
 
-                for(int i = 0; i < num_vertex; i++) {
+                for(i = 0; i < num_vertex; i++) {
                     G->adj[i] = NULL;
                 }
 
@@ -197,8 +199,8 @@ void addArco(graph * G, int start, int dest, int peso) {
 
 
 void printGraph(graph * G) {
-    
-    for(int i = 0; i < G->n_vertex; i++) {
+    int i;
+    for(i = 0; i < G->n_vertex; i++) {
         edge * scorri = G->adj[i];
         printf("lista di %d: ", i);
         while(scorri){
@@ -237,7 +239,7 @@ void deleteArco(graph * G, int start, int to_delete) {
 
 }
 
-graph * unione(graph * G1, graph * G2, int p) {
+/*graph * unione(graph * G1, graph * G2, int p) {
     int n_max = 0;
 
     if (G1->n_vertex >= G2->n_vertex) {
@@ -292,9 +294,44 @@ graph * unione(graph * G1, graph * G2, int p) {
     }
 
     return G3;
+}*/
+
+
+graph * unione(graph * G1, graph * G2, int p) {
+    int n_max = 0;
+	int i, j;
+	
+    if (G1->n_vertex >= G2->n_vertex) {
+        n_max = G1->n_vertex;
+    } else {
+        n_max = G2->n_vertex;
+    }
+
+    graph * G3 = NULL;
+    G3 = createGraph(G3, n_max); // Crea G3 con il numero massimo di vertici
+
+    edge *scorri = NULL, *scorri2 = NULL;
+
+    for (i = 0, j = 0; i < G1->n_vertex, j < G1->n_vertex; i++, j++) {
+
+	    scorri = G1->adj[i];
+	    scorri2 = G2->adj[j];
+	
+	    while (scorri) {
+	        while (scorri2) {
+	            if (p == (scorri->peso + scorri2->peso)) {
+	                addArco(G3, i, scorri->key, scorri->peso + scorri2->peso);
+	                addArco(G3, j, scorri2->key, scorri2->peso + scorri2->peso);
+	            }
+	            scorri2 = scorri2->next;
+	        }
+	        scorri = scorri->next;
+	    }
+		
+    }
+
+    return G3;
 }
-
-
 
 
 //Con intersezione
